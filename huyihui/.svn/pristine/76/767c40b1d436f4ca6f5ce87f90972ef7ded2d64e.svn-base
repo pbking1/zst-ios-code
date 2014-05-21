@@ -1,0 +1,164 @@
+//
+//  UsingCouponViewController.m
+//  huyihui
+//
+//  Created by zaczh on 14-4-10.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "UsingCouponViewController.h"
+
+@interface UsingCouponViewController ()
+@property (copy, nonatomic) NSArray *coupons;
+@end
+
+@implementation UsingCouponViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+static NSString *cellIdentifier= @"cellIdentifier";
+//static NSString *searchCell = @"searchCell";
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.title = @"选择优惠券";
+    
+    [self.table registerNib:[UINib nibWithNibName:@"SelectCouponCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:cellIdentifier];
+    
+    [self requestDataByCouponType:0];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+//优惠券状态（0：未使用，1：已使用，2：已过期，）
+- (void)requestDataByCouponType:(NSInteger)type
+{
+    [CustomBezelActivityView activityViewForView:self.view withLabel:NSLocalizedString(@"请稍候", @"")];
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] init];
+    [param setObject:[NUSD objectForKey:kMerchantId] forKey:@"merchantId"];
+    [param setObject:[NUSD objectForKey:kCurrentUserId] forKey:@"userKo"];
+    [param setObject:[NUSD objectForKey:kCurrentUserToken] forKey:@"token"];
+    [param setObject:[NSNumber numberWithInteger:type] forKey:@"couponType"];
+    
+    [RemoteManager Posts:kGET_SUBSCRIBER_COUPON Parameters:param WithBlock:^(id json, NSError *error) {
+        [CustomBezelActivityView removeViewAnimated:YES];
+        if(error == nil){
+            if([[json objectForKey:@"state"] integerValue] == 1){
+                self.coupons = [json objectForKey:@"couponList"];
+                if(self.coupons.count == 0){
+                    self.btnOK.enabled = NO;
+                }else{
+                    self.btnOK.enabled = YES;
+                }
+                [self.table reloadData];
+            }else{
+                NSLog(@"server error");
+                NSLog(@"reason: %@",[json objectForKey:@"message"]);
+            }
+        }else{
+            NSLog(@"network error 0:%@",error);
+        }
+    }];
+    [param release];
+}
+
+#pragma mark - tableview
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 110.0f;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSInteger count = self.coupons.count;
+    
+    self.tablePlaceholder.hidden = count == 0?NO:YES;
+    
+//    NSMutableAttributedString *attrStrM = [NSMutableAttributedString new];
+//    NSAttributedString *attrStr0 = [[NSAttributedString alloc] initWithString:@"亲爱的会员，您共有" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12],NSForegroundColorAttributeName:[Util rgbColor:"818181"]}];
+//    NSAttributedString *attrStr1 = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)count] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12],NSForegroundColorAttributeName:[Util rgbColor:"e06b6d"]}];
+//    NSAttributedString *attrStr2 = [[NSAttributedString alloc] initWithString:@"张优惠券" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12],NSForegroundColorAttributeName:[Util rgbColor:"818181"]}];
+//    
+//    [attrStrM appendAttributedString:attrStr0];
+//    [attrStrM appendAttributedString:attrStr1];
+//    [attrStrM appendAttributedString:attrStr2];
+//    
+//    [attrStr0 release];
+//    [attrStr1 release];
+//    [attrStr2 release];
+//    self.couponSummaryLabel.attributedText = attrStrM;
+//    [attrStrM release];
+    return count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    
+    UILabel *merchant = (UILabel *)[[cell.contentView viewWithTag:1] viewWithTag:11];
+    UILabel *money = (UILabel *)[[cell.contentView viewWithTag:1] viewWithTag:2];
+    UILabel *code = (UILabel *)[[cell.contentView viewWithTag:1] viewWithTag:3];
+    UILabel *desc = (UILabel *)(((UIView *)(cell.contentView.subviews[2])).subviews[3]);
+    UILabel *requireMinimum = (UILabel *)[[cell.contentView viewWithTag:1] viewWithTag:4];
+    
+    //    UILabel *begin = (UILabel *)[[cell.contentView viewWithTag:1] viewWithTag:6];
+    
+    UILabel *expire = (UILabel *)[[cell.contentView viewWithTag:1] viewWithTag:8];
+    
+    merchant.text = APP_DELEGATE.merchantInfo[@"name"];
+    money.text = [NSString stringWithFormat:@"%@",self.coupons[indexPath.row][@"money"]];
+    code.text = [NSString stringWithFormat:@"%@",self.coupons[indexPath.row][@"id"]];
+    desc.text = [NSString stringWithFormat:@"%@",self.coupons[indexPath.row][@"explanation"]];
+    requireMinimum.text = [NSString stringWithFormat:@"订单满%@元（不包含邮费）",self.coupons[indexPath.row][@"consumption"]];
+    NSDate *date = nil;
+    date = [NSDate dateWithTimeIntervalSince1970:[self.coupons[indexPath.row][@"endDate"] longLongValue]/1000];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy.MM.dd"];
+    expire.text = [NSString stringWithFormat:@"%@", [formatter stringFromDate:date]];
+    
+    //    date = [NSDate dateWithTimeIntervalSince1970:[self.coupons[indexPath.row][@"startDate"] longLongValue]/1000];
+    //    begin.text = [NSString stringWithFormat:@"%@",[formatter stringFromDate:date]];
+    [formatter release];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
+}
+
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UIButton *selectStatus = (UIButton *)[cell.contentView viewWithTag:12];
+    [selectStatus setImage:[UIImage imageNamed:@"list_ticking options_push"] forState:UIControlStateNormal];
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UIButton *selectStatus = (UIButton *)[cell.contentView viewWithTag:12];
+    [selectStatus setImage:[UIImage imageNamed:@"list_ticking options_normal"] forState:UIControlStateNormal];
+}
+- (IBAction)onDone:(id)sender {
+    if(self.completionBlock != nil){
+        NSDictionary *dict = self.coupons[self.table.indexPathForSelectedRow.row];
+        self.completionBlock(dict);
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)dealloc {
+    [_btnOK release];
+    [super dealloc];
+}
+@end

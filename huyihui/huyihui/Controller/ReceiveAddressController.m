@@ -1,0 +1,332 @@
+//
+//  ReceiveAddressController.m
+//  huyihui
+//
+//  Created by zhangmeifu on 6/3/14.
+//  Copyright (c) 2014 linyi. All rights reserved.
+//
+
+#import "ReceiveAddressController.h"
+#import "AddOrChangerAddress.h"
+#import "ZacNoticeView.h"
+
+
+@interface ReceiveAddressController ()
+{
+   
+}
+
+@end
+
+@implementation ReceiveAddressController
+@synthesize isEdit=_isEdit;
+@synthesize isManaging=_isManaging;
+@synthesize addressArr=_addressArr;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        _isEdit=false;
+        _addressArr=[[NSMutableArray alloc]init];
+        
+        
+        
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.title=@"收货地址";
+    
+    UIButton *manageBtn=[UIButton buttonWithType:UIButtonTypeCustom];
+    [manageBtn setFrame:CGRectMake(0, 0, 50,45)];
+    
+    [manageBtn setTitle:@"编辑" forState:UIControlStateNormal];
+    
+    
+    UIBarButtonItem *manageItem=[[UIBarButtonItem alloc]initWithCustomView:manageBtn];
+    self.navigationItem.rightBarButtonItem=manageItem;
+    [manageItem release];
+    [manageBtn addTarget:self action:@selector(manageAddressAction:) forControlEvents:UIControlEventTouchUpInside];
+
+    _receiveAddressTable.allowsSelectionDuringEditing=YES;
+    [_receiveAddressTable reloadData];
+    
+    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
+    UIButton *addBtn=[UIButton buttonWithType:UIButtonTypeCustom];
+    [addBtn addTarget:self action:@selector(addNewAddress:) forControlEvents:UIControlEventTouchUpInside];
+    [addBtn setFrame:CGRectMake(0, 3, 150, 35)];
+    [addBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [addBtn setTitle:@"新增收货地址" forState:UIControlStateNormal];
+    [addBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [addBtn setImage:[UIImage imageNamed:@"3-03shipping address_add address_normal"] forState:UIControlStateNormal];
+    // [addBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    [addBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 20)];
+    [footerView addSubview:addBtn];
+    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 1)];
+    [lineView setBackgroundColor:[UIColor colorWithWhite:0.784 alpha:1.000]];
+    [footerView addSubview:lineView];
+    [lineView release];
+    _receiveAddressTable.tableFooterView=footerView;
+    [_receiveAddressTable.tableFooterView setBackgroundColor:[UIColor whiteColor]];
+    _receiveAddressTable.backgroundColor=[UIColor colorWithRed:0.941 green:0.937 blue:0.929 alpha:1.000];
+    [footerView release];
+    
+//    [NSThread detachNewThreadSelector:@selector(getDeliveryInfoFromServer) toTarget:self withObject:nil];
+    
+                      
+    
+    
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc {
+    self.addressArr=nil;
+    [_receiveAddressTable release];
+    [super dealloc];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [CustomActivityView activityViewForView:self.view withLabel:@"请稍候"];
+    
+    [NSThread detachNewThreadSelector:@selector(getDeliveryInfoFromServer) toTarget:self withObject:nil];
+    
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_addressArr count];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell=[[[NSBundle mainBundle]loadNibNamed:@"checkOutCell" owner:self options:nil]objectAtIndex:1];
+    return cell.bounds.size.height;
+    
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell=[[[NSBundle mainBundle]loadNibNamed:@"checkOutCell" owner:self options:nil]objectAtIndex:1];
+    if (indexPath.row==0)
+    {
+        for (UIView *view in [cell.contentView subviews])
+        {
+            if ([[[self.addressArr objectAtIndex:0]objectForKey:@"latestAdd"]boolValue])
+            {
+                [((UILabel*)view)setTextColor:[UIColor redColor]];
+            }
+            else
+            {
+                [((UILabel*)view)setTextColor:[UIColor blackColor]];
+                
+            }
+            
+        }
+    }
+    cell.editingAccessoryType=UITableViewCellAccessoryDisclosureIndicator;
+    
+
+    cell.accessoryType=UITableViewCellAccessoryNone;
+    
+    
+    UILabel *receivecontactLabel=(UILabel*)[cell viewWithTag:1];
+    UILabel *regionLabel=(UILabel*)[cell viewWithTag:2];
+    UILabel *addressDetailLabel=(UILabel*)[cell viewWithTag:3];
+    
+    receivecontactLabel.text=[[self.addressArr objectAtIndex:indexPath.row]objectForKey:@"recivecontact"];
+    regionLabel.text=[[[[self.addressArr objectAtIndex:indexPath.row]objectForKey:@"provinceStr"]stringByAppendingString:[[self.addressArr objectAtIndex:indexPath.row]objectForKey:@"cityStr"]]stringByAppendingString:[[self.addressArr objectAtIndex:indexPath.row]objectForKey:@"regionStr"]];
+    addressDetailLabel.text=[[self.addressArr objectAtIndex:indexPath.row]objectForKey:@"shippingaddress"];
+    
+    
+ 
+    
+
+        
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle==UITableViewCellEditingStyleDelete)
+    {
+        [NSThread detachNewThreadSelector:@selector(deleteDeliveryInfoFromServer:) toTarget:self withObject: [_addressArr objectAtIndex:indexPath.row]];
+        
+//        NSArray *indexArray=[NSArray arrayWithObject:indexPath];
+//        [_addressArr removeObjectAtIndex:indexPath.row];
+//        [tableView deleteRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationRight];
+    }
+}
+
+
+
+
+
+
+-(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+   
+    AddOrChangerAddress *addOrChangeCtl=[[AddOrChangerAddress alloc]init];
+    [self.navigationController pushViewController:addOrChangeCtl animated:YES];
+    [addOrChangeCtl release];
+    
+    
+
+    
+}
+#pragma mark - tableview delegate
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_isEdit)
+    {
+        AddOrChangerAddress *addOrChange=[[AddOrChangerAddress alloc]init];
+        addOrChange.DeliveryInfoDic=[[_addressArr objectAtIndex:indexPath.row]mutableCopy];
+        addOrChange.isNewAddress=NO;
+        addOrChange.saveAddressSuccess=^(int success){ [ZacNoticeView showAtYPosition:SCREEN_HEIGHT/2 type:success text:@"收货地址修改成功" duration:2];};
+        [self.navigationController pushViewController:addOrChange animated:YES];
+        [addOrChange release];
+    }
+    else
+    {
+        if (_isManaging)
+        {
+            
+        }
+        else
+        {
+            if (self.completeAddress)
+            {
+                self.completeAddress([self.addressArr objectAtIndex:indexPath.row]);
+            }
+           
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    
+    
+    }
+}
+
+-(void)manageAddressAction:(id)sender
+{
+    UIButton *btn=(UIButton*)sender;
+    
+    _isEdit=!_isEdit;
+    if (_isEdit)
+    {
+        [btn setTitle:@"完成" forState:UIControlStateNormal];
+        _receiveAddressTable.editing=YES;
+    
+    }
+    else
+    {
+        [btn setTitle:@"编辑" forState:UIControlStateNormal];
+        _receiveAddressTable.editing=NO;
+        
+    }
+    
+    [_receiveAddressTable reloadData];
+    
+    
+}
+
+-(void)addNewAddress:(id)sender
+{
+    if (self.addressArr.count >= 20)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"收货地址数目不能超过20个" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];
+    }
+    else
+    {
+        AddOrChangerAddress *addOrChangeCtl=[[AddOrChangerAddress alloc]init];
+        addOrChangeCtl.isNewAddress=YES;
+        addOrChangeCtl.saveAddressSuccess=^(int success){ [ZacNoticeView showAtYPosition:SCREEN_HEIGHT/2 type:success text:@"新增收货地址成功" duration:2];};
+        [self.navigationController pushViewController:addOrChangeCtl animated:YES];
+        [addOrChangeCtl release];
+    }
+    
+}
+
+-(void)getDeliveryInfoFromServer
+{
+    @autoreleasepool
+    {
+        NSMutableDictionary *params=[[NSMutableDictionary alloc]init];
+        [params setObject:[NUSD objectForKey:kCurrentUserId] forKey:@"userKo"];
+        [params setObject:[NUSD objectForKey:kCurrentUserToken] forKey:@"token"];
+        [params setObject:[NSNumber numberWithInt:5] forKey:@"num"];
+        [params setObject:[NSNumber numberWithInt:1] forKey:@"pageIndex"];
+        [RemoteManager Posts:kGET_DELIVERY_INFO Parameters:params WithBlock:^(id json, NSError *error) {
+            if (error==nil)
+            {
+                [CustomActivityView removeView];
+                NSLog(@"%@",json);
+                self.addressArr=[[json objectForKey:@"deliveryInfoList"]mutableCopy];
+//                NSMutableArray  *addressArray=[[json objectForKey:@"deliveryInfoList"]mutableCopy];
+                for (int i=0;i<[self.addressArr count];i++)
+                {
+                    NSDictionary *dic=[self.addressArr objectAtIndex:i];
+                    
+                    if ([[dic objectForKey:@"latestAdd"]intValue]==1)
+                    {
+                        
+                        [NUSD setValue:[NSKeyedArchiver archivedDataWithRootObject:dic] forKey:kUserDefaultAddress];
+                        [NUSD synchronize];
+                        NSLog(@"%@",[NSKeyedUnarchiver unarchiveObjectWithData: [NUSD objectForKey:kUserDefaultAddress]]);
+                        
+                        [self.addressArr exchangeObjectAtIndex:i withObjectAtIndex:0];
+                        
+                    }
+                   
+    
+                }
+                
+              
+
+                [self.receiveAddressTable performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+                
+            }
+        }];
+    }
+    
+}
+
+-(void)deleteDeliveryInfoFromServer:(NSMutableDictionary*)dic
+{
+    @autoreleasepool
+    {
+        NSMutableDictionary *params=[[NSMutableDictionary alloc]init];
+        [params setObject:[dic objectForKey:@"code"] forKey:@"code"];
+        [params setObject:[NUSD objectForKey:kCurrentUserToken] forKey:@"token"];
+        [params setObject:[NUSD objectForKey:kCurrentUserId] forKey:@"userKo"];
+       [RemoteManager Posts:kDELETE_DELIVERYINFO Parameters:params WithBlock:^(id json, NSError *error) {
+           if (error==nil)
+           {
+               NSLog(@"%@",json);
+               if ([[json objectForKey:@"state"]intValue]==1)
+               {
+                   [_addressArr removeObject:dic];
+                   [self.receiveAddressTable performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+               }
+           }
+       }];
+    }
+    
+}
+@end

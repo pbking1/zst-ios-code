@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AppRecommendListViewController">
+            <connections>
+                <outlet property="placeHolder" destination="XRi-QN-Pnb" id="DWR-fo-ihp"/>
+                <outlet property="placeHolder_iv" destination="MXX-gX-d3i" id="GBZ-f0-J7j"/>
+                <outlet property="placeHolder_la" destination="aLp-JW-ctG" id="GXP-95-kot"/>
+                <outlet property="tableView" destination="abF-YE-PiC" id="SFv-hJ-RMW"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="gjr-Ze-G2c"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="70" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="abF-YE-PiC">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="QOC-7H-6ZK"/>
+                        <outlet property="delegate" destination="-1" id="0s9-yv-FnB"/>
+                    </connections>
+                </tableView>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRi-QN-Pnb" userLabel="PlaceHolder View">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="1-02group_buy_table_placeholder.png" translatesAutoresizingMaskIntoConstraints="NO" id="MXX-gX-d3i">
+                            <rect key="frame" x="97" y="60" width="126" height="127"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="127" id="DGc-dp-nK7"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="敬请期待" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aLp-JW-ctG">
+                            <rect key="frame" x="97" y="200" width="126" height="20"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="MXX-gX-d3i" firstAttribute="leading" secondItem="aLp-JW-ctG" secondAttribute="leading" id="GQA-IT-Ycd"/>
+                        <constraint firstItem="aLp-JW-ctG" firstAttribute="top" secondItem="MXX-gX-d3i" secondAttribute="bottom" constant="13" id="R5u-QW-3H5"/>
+                        <constraint firstItem="MXX-gX-d3i" firstAttribute="trailing" secondItem="aLp-JW-ctG" secondAttribute="trailing" id="Rc7-wo-22Y"/>
+                        <constraint firstItem="aLp-JW-ctG" firstAttribute="centerX" secondItem="XRi-QN-Pnb" secondAttribute="centerX" id="Xxl-nH-uw4"/>
+                        <constraint firstItem="MXX-gX-d3i" firstAttribute="top" secondItem="XRi-QN-Pnb" secondAttribute="top" constant="60" id="eei-M6-VnN"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="XRi-QN-Pnb" firstAttribute="leading" secondItem="abF-YE-PiC" secondAttribute="leading" id="0hl-Lu-pf0"/>
+                <constraint firstItem="XRi-QN-Pnb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5VX-I9-mTx"/>
+                <constraint firstItem="XRi-QN-Pnb" firstAttribute="top" secondItem="abF-YE-PiC" secondAttribute="top" id="986-qf-n75"/>
+                <constraint firstItem="XRi-QN-Pnb" firstAttribute="trailing" secondItem="abF-YE-PiC" secondAttribute="trailing" id="WJw-na-hEI"/>
+                <constraint firstAttribute="bottom" secondItem="XRi-QN-Pnb" secondAttribute="bottom" id="k0c-0g-VYb"/>
+                <constraint firstAttribute="trailing" secondItem="XRi-QN-Pnb" secondAttribute="trailing" id="kuc-Zr-T0W"/>
+                <constraint firstItem="XRi-QN-Pnb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="p5F-8y-NL6"/>
+                <constraint firstItem="XRi-QN-Pnb" firstAttribute="bottom" secondItem="abF-YE-PiC" secondAttribute="bottom" id="y7d-q6-Icg"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="1-02group_buy_table_placeholder.png" width="126" height="127"/>
+    </resources>
+</document>

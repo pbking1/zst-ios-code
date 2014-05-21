@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BuyProductViewController">
+            <connections>
+                <outlet property="collectionView" destination="7Ie-GH-8QQ" id="UMb-9n-rkm"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="7Ie-GH-8QQ">
+                    <rect key="frame" x="0.0" y="0.0" width="325" height="522"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ePw-rA-nKR">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="320" height="40"/>
+                        <size key="footerReferenceSize" width="320" height="30"/>
+                        <inset key="sectionInset" minX="8" minY="0.0" maxX="8" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <cells/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="allowsMultipleSelection" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="XCu-CZ-Fek"/>
+                        <outlet property="delegate" destination="-1" id="KpI-jE-AZi"/>
+                    </connections>
+                </collectionView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G8T-zB-RdI">
+                    <rect key="frame" x="123" y="530" width="75" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="加入购物车" backgroundImage="tab_button2_normal.png">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="onAddProductToCart:" destination="-1" eventType="touchUpInside" id="6zt-Ol-hkf"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="G8T-zB-RdI" secondAttribute="bottom" constant="8" id="0DU-gm-IkS"/>
+                <constraint firstItem="G8T-zB-RdI" firstAttribute="top" secondItem="7Ie-GH-8QQ" secondAttribute="bottom" constant="8" id="3q8-qr-KS8"/>
+                <constraint firstAttribute="bottom" secondItem="7Ie-GH-8QQ" secondAttribute="bottom" constant="46" id="MQE-YW-Vma"/>
+                <constraint firstItem="G8T-zB-RdI" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="123" id="PWw-wr-emR"/>
+                <constraint firstItem="7Ie-GH-8QQ" firstAttribute="top" secondItem="1" secondAttribute="top" id="Zzg-yk-1Pm"/>
+                <constraint firstAttribute="trailing" secondItem="7Ie-GH-8QQ" secondAttribute="trailing" constant="-5" id="ghj-m2-0i7"/>
+                <constraint firstAttribute="trailing" secondItem="G8T-zB-RdI" secondAttribute="trailing" constant="122" id="h0e-O6-U5E"/>
+                <constraint firstItem="7Ie-GH-8QQ" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="wJf-Fn-Suw"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="tab_button2_normal.png" width="88" height="24"/>
+    </resources>
+</document>

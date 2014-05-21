@@ -1,0 +1,791 @@
+//
+//  AddOrChangerAddress.m
+//  huyihui
+//
+//  Created by zhangmeifu on 20/3/14.
+//  Copyright (c) 2014 linyi. All rights reserved.
+//
+
+#import "AddOrChangerAddress.h"
+#import "AddressNoticeView.h"
+
+
+@interface AddOrChangerAddress ()
+{
+    UITextField *receivecontactField;
+    UITextField *telephoneField;
+    UITextField *postField;
+    UITextField *provinceAndAgionField;;
+    UITextField *addressDetailField;
+    BOOL defaultAddress;
+    UIButton *setDefautBtn;
+    UISwitch *defaultSwitch;
+    
+    UIButton *remindBtn;
+}
+
+@end
+
+@implementation AddOrChangerAddress
+
+@synthesize changeAddressTable=_changeAddressTable;
+@synthesize addressDic=_addressDic;
+@synthesize firstArr=_firstArr;
+@synthesize secondArr=_secondArr;
+@synthesize thirdArr=_thirdArr;
+@synthesize addressPickerView=_addressPickerView;
+@synthesize isNewAddress=_isNewAddress;
+@synthesize DeliveryInfoDic=_DeliveryInfoDic;
+@synthesize regionsListArr=_regionsListArr;
+@synthesize plistArr=_plistArr;
+@synthesize originDeliveryDic=_originDeliveryDic;
+
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        _DeliveryInfoDic=[[NSMutableDictionary alloc]init];
+        _regionsListArr=[[NSMutableArray alloc]init];
+        _plistArr=[[NSMutableArray alloc]init];
+       
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    
+    if (_isNewAddress)
+    {
+        self.title=@"新增收货地址";
+    }
+    else
+    {
+        self.title=@"修改收货地址";
+    }
+    
+    UIButton *saveBtn=[UIButton buttonWithType:UIButtonTypeCustom];
+    [saveBtn setFrame:CGRectMake(0, 0, 50,45)];
+    [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+    UIBarButtonItem *saveItem=[[UIBarButtonItem alloc]initWithCustomView:saveBtn];
+    self.navigationItem.rightBarButtonItem=saveItem;
+    [saveItem release];
+    [saveBtn addTarget:self action:@selector(saveAddressAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    
+    _changeAddressTable=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-64) style:UITableViewStylePlain];
+    _changeAddressTable.delegate=self;
+    _changeAddressTable.dataSource=self;
+    _changeAddressTable.backgroundColor=[UIColor colorWithRed:0.941 green:0.937 blue:0.929 alpha:1.000];
+    [self.view addSubview:_changeAddressTable];
+    
+    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+    lineView.backgroundColor=[UIColor colorWithRed:0.863 green:0.863 blue:0.875 alpha:1.000];
+    
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0,44, SCREEN_WIDTH, 30)];
+    label.backgroundColor=[UIColor whiteColor];
+    label.textColor=[UIColor redColor];
+    [label setText:@"  设为默认收货地址" ];
+    //setDefautBtn.contentEdgeInsets=UIEdgeInsetsMake(0, 0, 0, 200);
+    [label setFont:[UIFont systemFontOfSize:13]];
+    defaultSwitch=[[UISwitch alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-100, 44, 50, 30)];
+    [defaultSwitch addTarget:self action:@selector(setMyDefaultAddress:) forControlEvents:UIControlEventValueChanged];
+  
+    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 100)];
+    footerView.backgroundColor=[UIColor colorWithRed:0.941 green:0.937 blue:0.929 alpha:1.000];
+    [footerView addSubview:lineView];
+    [footerView addSubview:label];
+    [footerView addSubview:defaultSwitch];
+    _changeAddressTable.tableFooterView=footerView;
+    [defaultSwitch release];
+    [lineView release];
+    [footerView release];
+    
+    if (!_isNewAddress)
+    {
+        if ([[_DeliveryInfoDic objectForKey:@"latestAdd"]intValue]==1)
+        {
+            defaultAddress=YES;
+        }
+        else
+        {
+            defaultAddress=NO;
+        
+        }
+        
+    }
+    else
+    {
+        defaultAddress=NO;
+        
+    }
+    [defaultSwitch setOn:defaultAddress];
+
+    
+    
+    if (!_isNewAddress)
+    {
+        self.originDeliveryDic=[self.DeliveryInfoDic copy];
+    }
+
+    
+    
+    self.addressPickerView=[[[UIPickerView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT+250, SCREEN_WIDTH, 250)] autorelease];
+    _addressPickerView.delegate=self;
+    _addressPickerView.dataSource=self;
+    [self.view addSubview:_addressPickerView];
+    _addressPickerView.backgroundColor=[UIColor colorWithWhite:0.949 alpha:1.000];
+    
+    NSString *plistFilePath=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/region.plist"];
+    self.plistArr=[NSArray arrayWithContentsOfFile:plistFilePath];
+    self.firstArr=self.plistArr;
+    
+    if (!_isNewAddress)
+    {
+        for ( int  i=0;i<[self.firstArr count];i++)
+        {
+            if ([[_DeliveryInfoDic objectForKey:@"provinceId"]integerValue]==[[[self.firstArr objectAtIndex:i]objectForKey:@"id"]integerValue])
+            {
+                self.secondArr=[[self.firstArr objectAtIndex:i]objectForKey:@"subArr"];
+                [self.addressPickerView selectRow:i inComponent:0 animated:NO];
+            }
+        }
+        for ( int  i=0;i<[self.secondArr count];i++)
+        {
+            if ([[_DeliveryInfoDic objectForKey:@"cityId"]integerValue]==[[[self.secondArr objectAtIndex:i]objectForKey:@"id"]integerValue])
+            {
+                self.thirdArr=[[self.secondArr objectAtIndex:i]objectForKey:@"subArr"];
+                [self.addressPickerView reloadComponent:1];
+                [self.addressPickerView selectRow:i inComponent:1 animated:NO];
+            }
+        }
+        for ( int  i=0;i<[self.thirdArr count];i++)
+        {
+            if ([[_DeliveryInfoDic objectForKey:@"shippingregion"] integerValue]==[[[self.thirdArr objectAtIndex:i]objectForKey:@"id"]integerValue])
+            {
+                 [self.addressPickerView reloadComponent:2];
+                [self.addressPickerView selectRow:i inComponent:2 animated:NO];
+                
+            }
+        }
+    }
+    else
+    {
+        self.secondArr=[[self.firstArr objectAtIndex:0]objectForKey:@"subArr"];
+        self.thirdArr=[[self.secondArr objectAtIndex:0]objectForKey:@"subArr"];
+        [self.addressPickerView reloadAllComponents];
+
+    }
+
+    
+    
+    
+ 
+    
+   
+    
+    
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)dealloc
+{
+    self.changeAddressTable=nil;
+    self.firstArr=nil;
+    self.secondArr=nil;
+    self.thirdArr=nil;
+    self.addressDic=nil;
+    self.addressPickerView=nil;
+    [super dealloc];
+}
+
+#pragma mark -tableview  dataSource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 5;
+   
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *titleArr=@[@"收货人",@"手机号码",@"邮政编码",@"所在地区",@"详细地址"];
+    
+    static NSString *cellIdentifier=@"cell";
+    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    
+    if (cell==nil)
+    {
+        cell=[[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier]autorelease];
+        UITextField *textField=[[[UITextField alloc]initWithFrame:CGRectMake(10, 2, SCREEN_WIDTH-10, 40)]autorelease];
+        textField.tag=indexPath.row;
+        textField.delegate=self;
+        [cell.contentView addSubview:textField];
+        
+        
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    }
+    for (UIView *view in cell.contentView.subviews)
+    {
+        
+        if ([view isKindOfClass:[UITextField class]])
+        {
+            UITextField *textField=(UITextField *)view;
+            textField.placeholder=[titleArr objectAtIndex:indexPath.row];
+            [textField setTextColor:[UIColor blackColor]];
+            [textField setFont:[UIFont systemFontOfSize:13]];
+            textField.clearButtonMode=UITextFieldViewModeWhileEditing;
+            
+            
+            
+            if (indexPath.row==3)
+            {
+                //  textField.inputView.userInteractionEnabled = NO;
+                UIView *dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+                textField.inputView = dummyView; // Hide keyboard, but show blinking cursor
+                //textField.inputView=[[UIView alloc]initWithFrame:CGRectZero];
+            }
+            
+            if (!_isNewAddress)
+            {
+                switch (indexPath.row)
+                {
+                    case 0:
+                        textField.text=[_DeliveryInfoDic objectForKey:@"recivecontact"];
+                       
+                        break;
+                        
+                    case 1:
+                        textField.text=[_DeliveryInfoDic objectForKey:@"shippingmobile"];
+                       
+                        break;
+                    case 2:
+                        textField.text=([[_DeliveryInfoDic objectForKey:@"shippingpost"]isEqual:[NSNull null]]?nil:[_DeliveryInfoDic objectForKey:@"shippingpost"]);
+                        
+                        break;
+                    case 3:
+                    {
+                        NSString *emptyString=@"";
+                        if (self.firstArr)
+                        {
+                            NSString *tmpString=[NSString stringWithFormat:@"%@%@%@",
+                                                 [[self.firstArr  objectAtIndex:[_addressPickerView selectedRowInComponent:0]] objectForKey:@"name"],[[self.secondArr  objectAtIndex:[_addressPickerView selectedRowInComponent:1]] objectForKey:@"name"],(self.thirdArr==nil?emptyString:[[self.thirdArr  objectAtIndex:[_addressPickerView selectedRowInComponent:2]] objectForKey:@"name"])];
+                            
+                            
+                            textField.text=tmpString;
+                            
+                        }
+                        
+                        
+                    }
+                        
+                        break;
+                    case 4:
+                        textField.text=[_DeliveryInfoDic objectForKey:@"shippingaddress"];
+                        
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            else
+            {
+                if (indexPath.row==3)
+                {
+                    NSString *emptyString=@"";
+                    if (self.firstArr)
+                    {
+                        NSString *tmpString=[NSString stringWithFormat:@"%@%@%@",
+                                             [[self.firstArr  objectAtIndex:[_addressPickerView selectedRowInComponent:0]] objectForKey:@"name"],[[self.secondArr  objectAtIndex:[_addressPickerView selectedRowInComponent:1]] objectForKey:@"name"],(self.thirdArr==nil?emptyString:[[self.thirdArr  objectAtIndex:[_addressPickerView selectedRowInComponent:2]] objectForKey:@"name"])];
+                        
+                        
+                        textField.text=tmpString;
+                        
+                    }
+                }
+                
+                
+        
+            }
+            
+            switch (indexPath.row)
+            {
+                case 0:
+                    receivecontactField=textField;
+                    break;
+                case 1:
+                    telephoneField=textField;
+                    break;
+                case 2:
+                    postField=textField;
+                    break;
+                case 3:
+                    provinceAndAgionField=textField;
+                    break;
+                case 4:
+                    addressDetailField=textField;
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            
+        }
+    }
+        
+    
+    
+   
+    
+   
+    return cell;
+}
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+     [receivecontactField resignFirstResponder];
+     [telephoneField resignFirstResponder];
+     [postField resignFirstResponder];
+     [provinceAndAgionField resignFirstResponder];
+     [addressDetailField resignFirstResponder];
+
+    
+}
+
+
+
+
+#pragma mark textField delegate
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField.tag==3)
+    {
+     
+    
+        
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [self.addressPickerView setFrame:CGRectMake(0, SCREEN_HEIGHT-250-24, SCREEN_WIDTH, 250)];
+            
+            //self.addressPickerView.hidden=NO;
+        } completion:^(BOOL finished) {
+           
+           
+        }];
+       
+    }
+    else
+    {
+ 
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            [self.addressPickerView setFrame:CGRectMake(0, SCREEN_HEIGHT+250, SCREEN_WIDTH, 250)];
+           
+        } completion:^(BOOL finished) {
+            
+            
+        }];
+        if (textField.tag==0)
+        {
+            
+        }
+        else if (textField.tag==1||textField.tag==2)
+        {
+            textField.keyboardType=UIKeyboardTypeNumberPad;
+        }
+        
+        if (textField.tag==4)
+        {
+            [_changeAddressTable setContentOffset:CGPointMake(0, _changeAddressTable.contentSize.height-200) animated:YES];
+        }
+        
+
+
+    }
+    
+}
+
+#pragma mark -pickerview dataSource
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    if (component==0)
+    {
+       
+        return [_firstArr count];
+    }
+    else if (component==1)
+    {
+        return [_secondArr count];
+    }
+    else if (component==2)
+    {
+        return [_thirdArr count];
+    }
+    return 0;
+    
+}
+
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 3;
+}
+
+-(NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    if (component==0)
+    {
+        
+      return [[_firstArr objectAtIndex:row]objectForKey:@"name"];
+        
+       
+    }
+    else if (component==1)
+    {
+     return [[_secondArr objectAtIndex:row]objectForKey:@"name"];
+       
+    }
+    else if (component==2)
+    {
+        return [[_thirdArr objectAtIndex:row]objectForKey:@"name"];
+    }
+    return nil;
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    
+    if (component==0)
+    {
+        
+        self.secondArr=[[self.firstArr objectAtIndex:row]objectForKey:@"subArr"];
+        
+        
+        if ([self.secondArr count])
+        {
+            self.thirdArr=[[self.secondArr objectAtIndex:0] objectForKey:@"subArr"];
+        }
+        else
+        {
+            self.thirdArr=nil;
+        }
+        
+        [pickerView reloadComponent:1];
+        [pickerView selectedRowInComponent:1];
+        [pickerView selectedRowInComponent:2];
+        
+        
+    }
+    else if(component==1)
+    {
+        if ([self.secondArr count])
+        {
+            self.thirdArr=[[self.secondArr objectAtIndex:row] objectForKey:@"subArr"];;
+        }
+        else
+        {
+            self.thirdArr=nil;
+            
+        }
+        
+        
+        [pickerView selectRow:0 inComponent:2 animated:YES];
+        
+    }
+    [pickerView reloadComponent:2];
+    [self.changeAddressTable reloadData];
+    
+    
+    
+  //  [self.addressPickerView reloadAllComponents];
+    
+}
+
+-(CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
+{
+    if (component==0)
+    {
+        return 100;
+    }
+    else if (component==1)
+    
+    {
+        return 120;
+    }
+    else
+    {
+        return 100;
+    }
+}
+
+-(void)showOrHiddenPickerView:(id)sender
+{
+    _addressPickerView.hidden=YES;
+}
+-(void)setMyDefaultAddress:(id)sender
+{
+    UISwitch *switchBtn=(UISwitch *)sender;
+    defaultAddress=!defaultAddress;
+    [switchBtn setOn:defaultAddress];
+    
+    
+}
+
+-(void)removeBtnFromSuperView
+{
+   
+    [remindBtn removeFromSuperview];
+    
+}
+
+-(void)saveAddressAction:(id)sender
+{
+    
+    if (receivecontactField.text==nil||[receivecontactField.text isEqualToString:@""])
+    {
+        AddressNoticeView *notice=[[AddressNoticeView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH, 20, SCREEN_WIDTH, 44)];
+        [notice addressNoticeViewAnimationWithTitle:@"您还未填写收货人姓名" andTimeDuration:2];
+        [notice release];
+       
+    }
+    else if (telephoneField.text==nil||[telephoneField.text isEqualToString:@""])
+    {
+        AddressNoticeView *notice=[[AddressNoticeView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH, 20, SCREEN_WIDTH, 44)];
+        [notice addressNoticeViewAnimationWithTitle:@"您还未填写收货人电话" andTimeDuration:2];
+        [notice release];
+        
+    }
+    else if (postField.text==nil||[postField.text isEqualToString:@""])
+    {
+        AddressNoticeView *notice=[[AddressNoticeView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH, 20, SCREEN_WIDTH, 44)];
+        [notice addressNoticeViewAnimationWithTitle:@"您还未填写邮政编码" andTimeDuration:2];
+        [notice release];
+        
+    }
+    else if (provinceAndAgionField.text==nil||[provinceAndAgionField.text isEqualToString:@""])
+    {
+        AddressNoticeView *notice=[[AddressNoticeView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH, 20, SCREEN_WIDTH, 44)];
+        [notice addressNoticeViewAnimationWithTitle:@"您还未选择省市区" andTimeDuration:2];
+        [notice release];
+        
+    }
+    else if (addressDetailField.text==nil||[addressDetailField.text isEqualToString:@""])
+    {
+        AddressNoticeView *notice=[[AddressNoticeView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH, 20, SCREEN_WIDTH, 44)];
+        [notice addressNoticeViewAnimationWithTitle:@"您还未填写详细收货地址" andTimeDuration:2];
+        [notice release];
+        
+    }
+    else
+    {
+        if (_isNewAddress)
+        {
+            [_DeliveryInfoDic setObject:@"" forKey:@"code"];
+            [_DeliveryInfoDic setObject:[NUSD objectForKey:kCurrentUserId] forKey:@"userKo"];
+            [_DeliveryInfoDic setObject:receivecontactField.text forKey:@"recivecontact"];
+            [_DeliveryInfoDic setObject:telephoneField.text forKey:@"shippingmobile"];
+            [_DeliveryInfoDic  setObject:addressDetailField.text forKey:@"shippingaddress"];
+            [_DeliveryInfoDic  setObject:postField.text forKey:@"shippingpost"];
+            [_DeliveryInfoDic setObject:[[self.firstArr  objectAtIndex:[_addressPickerView selectedRowInComponent:0]] objectForKey:@"id"] forKey:@"provinceId"];
+            [_DeliveryInfoDic setObject:[[self.secondArr  objectAtIndex:[_addressPickerView selectedRowInComponent:1]] objectForKey:@"id"] forKey:@"cityId"];
+            [_DeliveryInfoDic setObject:[[self.thirdArr  objectAtIndex:[_addressPickerView selectedRowInComponent:2]] objectForKey:@"id"] forKey:@"shippingregion"];
+            
+            [_DeliveryInfoDic setObject:[[self.firstArr  objectAtIndex:[_addressPickerView selectedRowInComponent:0]] objectForKey:@"name"] forKey:@"provinceStr"];
+            [_DeliveryInfoDic setObject:[[self.secondArr  objectAtIndex:[_addressPickerView selectedRowInComponent:1]] objectForKey:@"name"] forKey:@"cityStr"];
+            [_DeliveryInfoDic setObject:[[self.thirdArr  objectAtIndex:[_addressPickerView selectedRowInComponent:2]] objectForKey:@"name"] forKey:@"regionStr"];
+            [_DeliveryInfoDic setObject:[NSString stringWithFormat:@"%hhd",defaultAddress] forKey:@"latestAdd"];
+            [CustomBezelActivityView activityViewForView:self.view withLabel:@"请稍候..."];
+            [NSThread detachNewThreadSelector:@selector(finishEditAdress) toTarget:self withObject:nil];
+            
+        }
+        else
+        {
+            [_DeliveryInfoDic setObject:receivecontactField.text forKey:@"recivecontact"];
+            [_DeliveryInfoDic setObject:telephoneField.text forKey:@"shippingmobile"];
+            [_DeliveryInfoDic setObject:postField.text forKey:@"shippingpost"];
+            [_DeliveryInfoDic setObject:addressDetailField.text forKey:@"shippingaddress"];
+            
+            [_DeliveryInfoDic setObject:[[self.firstArr  objectAtIndex:[_addressPickerView selectedRowInComponent:0]] objectForKey:@"id"] forKey:@"provinceId"];
+            [_DeliveryInfoDic setObject:[[self.secondArr  objectAtIndex:[_addressPickerView selectedRowInComponent:1]] objectForKey:@"id"] forKey:@"cityId"];
+            [_DeliveryInfoDic setObject:[[self.thirdArr  objectAtIndex:[_addressPickerView selectedRowInComponent:2]] objectForKey:@"id"] forKey:@"shippingregion"];
+            [_DeliveryInfoDic setObject:[NSString stringWithFormat:@"%hhd",defaultAddress] forKey:@"latestAdd"];
+            if ([_DeliveryInfoDic isEqualToDictionary:_originDeliveryDic])
+            {
+                
+            }
+            else
+            {
+                [_DeliveryInfoDic setObject:[[self.firstArr  objectAtIndex:[_addressPickerView selectedRowInComponent:0]] objectForKey:@"name"] forKey:@"provinceStr"];
+                [_DeliveryInfoDic setObject:[[self.secondArr  objectAtIndex:[_addressPickerView selectedRowInComponent:1]] objectForKey:@"name"] forKey:@"cityStr"];
+                [_DeliveryInfoDic setObject:[[self.thirdArr  objectAtIndex:[_addressPickerView selectedRowInComponent:2]] objectForKey:@"name"] forKey:@"regionStr"];
+                [_DeliveryInfoDic setObject:[NSString stringWithFormat:@"%hhd",defaultAddress] forKey:@"latestAdd"];
+                
+                [CustomBezelActivityView activityViewForView:self.view withLabel:@"请稍候..."];
+                [NSThread detachNewThreadSelector:@selector(finishEditAdress) toTarget:self withObject:nil];
+                
+                
+            }
+            
+            
+        }
+        
+    }
+    
+    
+    
+
+    
+}
+-(void)finishEditAdress
+{
+    NSError *error=nil;
+    NSData *data=[NSJSONSerialization dataWithJSONObject:_DeliveryInfoDic options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *deliverySting=  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];;
+    NSMutableDictionary *params=[[NSMutableDictionary alloc]init];
+    [params setObject:deliverySting forKey:@"deliveryInfo"];
+    [deliverySting release];
+    [params setObject:[NUSD objectForKey:kCurrentUserToken] forKey:@"token"];
+    [RemoteManager Posts:kADDOREDITDELIVERYINFO Parameters:params WithBlock:^(id json, NSError *error) {
+        if (error==nil)
+        {
+            [CustomBezelActivityView removeView];
+            NSLog(@"%@",json);
+            if ([[json objectForKey:@"state"]intValue]==1)
+            {
+                [self.navigationController popViewControllerAnimated:YES];
+                self.saveAddressSuccess(0);
+            }
+            else
+            {
+                [ZacNoticeView showAtYPosition:SCREEN_HEIGHT/2 type:1 text:@"收货地址修改失败" duration:2];
+            }
+            
+        }
+    }];
+    [params release];
+    
+}
+
+-(void)updateProvinceFromServer
+{
+    @autoreleasepool
+    {
+        NSMutableDictionary *params=[[NSMutableDictionary alloc]init];
+        [RemoteManager Posts:kGET_PROVINCEINFO Parameters:nil WithBlock:^(id json, NSError *error) {
+            if (error==nil) {
+                NSLog(@"%d",[[json objectForKey:@"regionsList"]count]);
+                NSLog(@"%@",json);
+                self.regionsListArr=[[json objectForKey:@"regionsList"]mutableCopy];
+                
+                NSMutableArray *tmpArr=[[NSMutableArray alloc]init];
+                for (int i=0;i<4;i++)
+                {
+                    [tmpArr addObject:[self newPlistFile:[NSMutableDictionary dictionaryWithDictionary:[self.regionsListArr objectAtIndex:i]]]];
+                }
+                
+                for (int i=0;i<[tmpArr count];i++)
+                {
+                    NSMutableDictionary *dic=[tmpArr objectAtIndex:i];
+                    if ([[dic objectForKey:@"id"]intValue]==2)
+                    {
+                        [self.plistArr addObjectsFromArray:[dic objectForKey:@"subArr"]];
+                        [tmpArr removeObject:dic];
+                        
+                    }
+                    
+                }
+                [self.plistArr addObjectsFromArray:tmpArr];
+                [tmpArr release];
+                
+
+                NSString *plistFilePath=[NSHomeDirectory() stringByAppendingPathComponent:@"region.plist"];
+                [self.plistArr writeToFile:plistFilePath atomically:YES];
+                self.firstArr=self.plistArr;
+                self.secondArr=[[self.firstArr objectAtIndex:0]objectForKey:@"subArr"];
+                self.thirdArr=[[self.secondArr objectAtIndex:0]objectForKey:@"subArr"];
+                [self.addressPickerView reloadAllComponents];
+                
+                if (!_isNewAddress)
+                {
+                    for ( int  i=0;i<[self.firstArr count];i++)
+                    {
+                        if ([[_DeliveryInfoDic objectForKey:@"provinceId"]integerValue]==[[[self.firstArr objectAtIndex:i]objectForKey:@"id"]integerValue])
+                        {
+                             self.secondArr=[[self.firstArr objectAtIndex:i]objectForKey:@"subArr"];
+                            [self.addressPickerView selectRow:i inComponent:0 animated:NO];
+                        }
+                    }
+                    for ( int  i=0;i<[self.secondArr count];i++)
+                    {
+                        if ([[_DeliveryInfoDic objectForKey:@"cityId"]integerValue]==[[[self.secondArr objectAtIndex:i]objectForKey:@"id"]integerValue])
+                        {
+                            self.thirdArr=[[self.secondArr objectAtIndex:i]objectForKey:@"subArr"];
+                            [self.addressPickerView selectRow:i inComponent:1 animated:NO];
+                        }
+                    }
+                    for ( int  i=0;i<[self.thirdArr count];i++)
+                    {
+                        if ([[_DeliveryInfoDic objectForKey:@"shippingregion"] integerValue]==[[[self.thirdArr objectAtIndex:i]objectForKey:@"id"]integerValue])
+                        {
+                            [self.addressPickerView selectRow:i inComponent:2 animated:NO];
+                        }
+                    }
+                }
+               
+                [self.changeAddressTable reloadData];
+                
+
+            
+            }
+        }];
+        [params release];
+
+    }
+    
+}
+-(NSMutableDictionary *)newPlistFile:(NSMutableDictionary *)parentDic
+{
+    
+    NSMutableArray *subArr=[[[NSMutableArray alloc]init]autorelease];
+   
+    for (NSMutableDictionary *Dic in self.regionsListArr)
+    {
+            
+            
+        if ([[parentDic objectForKey:@"id"]isEqual:[Dic objectForKey:@"parentId"]])
+        {
+            
+            NSMutableDictionary *subDic=[self newPlistFile:[NSMutableDictionary dictionaryWithDictionary:Dic]];
+            [subArr addObject:subDic];
+            
+            
+           
+        }
+        if ([subArr count])
+        {
+            [parentDic setObject:subArr forKey:@"subArr"];
+        }
+    
+        
+    }
+    
+    
+    return parentDic;
+    
+}
+
+@end

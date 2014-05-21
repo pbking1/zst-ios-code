@@ -1,0 +1,458 @@
+//
+//  Util.m
+//  ccydpro
+//
+//  Created by hiway on 13-2-19.
+//  Copyright (c) 2013年 hiway. All rights reserved.
+//
+
+#import "Util.h"
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonHMAC.h>
+#import <CommonCrypto/CommonCryptor.h>
+#import "NSData+Base64.h"
+#import <AudioToolbox/AudioToolbox.h>
+#import "AFAppDotNetAPIClient.h"
+#import "EGOCache.h"
+#define BACK_BUTTON_MARGIN_BETWEEN_TITLE_AND_IMAGE 6.5f
+#define IS_AVAILABLE(x)  ((x) != nil && ![(x) isEqual:[NSNull null]])
+
+@implementation Util
+
++ (NSString *)hmac_sha1:(NSString *)key text:(NSString *)text
+{
+    
+    const char *cKey  = [key cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *cData = [text cStringUsingEncoding:NSUTF8StringEncoding];
+    
+    char cHMAC[CC_SHA1_DIGEST_LENGTH];
+    
+    CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+    
+    NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC length:CC_SHA1_DIGEST_LENGTH];
+    NSString *hash = [HMAC base64EncodedString];//base64Encoding函数在NSData+Base64中定义（NSData+Base64网上有很多资源）
+    [HMAC release];
+    return hash;
+}
+
+
+
++ (NSString *)md5:(NSString *)input
+{
+    
+    if (input == nil) {
+        return input;
+    }
+    
+    const char *cStr = [input UTF8String];
+    unsigned char digest[16];
+    CC_MD5( cStr, strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output;
+    
+}
+
++ (NSString *)writeImageToFileSystem:(UIImage*)img {
+    
+    if (img == nil) {
+        return nil;
+    }
+    
+    NSData *data = UIImageJPEGRepresentation(img, 1.0);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingFormat:@"/%@.jpg", [Util createUUID]];
+    if ([data writeToFile:dataPath atomically:NO]) {
+        
+        return dataPath;
+    } else {
+        return  nil;
+    }
+}
+
+///*最好放在后台进程中执行*/
+//+ (NSCachedURLResponse *) getCachedResponseFromURL:(NSURL *)url
+//{
+//    if([NSURLCache sharedURLCache] == nil)
+//    {
+//        NSLog(@"No sharedURLCache set!");
+//        return nil;
+//    }
+//    NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
+//    NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
+//
+//    if(cachedResponse == nil)
+//    {
+//        NSURLResponse *response = [[[NSURLResponse alloc] init] autorelease];
+//        NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:nil];
+//        if(data)
+//        {
+//            cachedResponse = [[[NSCachedURLResponse alloc] initWithResponse:response data:data] autorelease];
+//            [[NSURLCache sharedURLCache] storeCachedResponse: cachedResponse forRequest:request];
+//        }
+//    }
+//    return cachedResponse;
+//}
+//
+//+ (void)removeAllCachedResponse
+//{
+//    if([NSURLCache sharedURLCache] == nil)
+//    {
+//        NSLog(@"No sharedURLCache set!");
+//        return;
+//    }
+//    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+//}
+
++ (BOOL)writeArray:(NSArray *)array toFilePath:(NSString *)path
+{
+    NSData * data = [NSKeyedArchiver archivedDataWithRootObject:array];
+    return [data writeToFile:path atomically:YES];
+}
+
++ (NSArray *)readArrayFromFile:(NSString *)filePath
+{
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+}
+
++ (BOOL)writeDictionary:(NSDictionary *)dict toFilePath:(NSString *)path
+{
+    NSData * data = [NSKeyedArchiver archivedDataWithRootObject:dict];
+    return [data writeToFile:path atomically:YES];
+}
+
++ (NSDictionary *)readDictionaryFromFile:(NSString *)filePath
+{
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+}
+
++(NSString *)writeVideoToFileSystem:(NSURL *)videoURL {
+    if (videoURL == nil) {
+        return nil;
+    }
+    NSData *data = [NSData dataWithContentsOfURL:videoURL];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *dataPath = [documentsDirectory stringByAppendingFormat:@"/%@.MOV", [Util createUUID]];
+   
+    if ([data writeToFile:dataPath atomically:NO]) {
+        return dataPath;
+    } else {
+        return  nil;
+    }
+    
+}
+
++ (NSString *)createUUID
+{
+    CFUUIDRef uuidObject = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *uuidStr = (NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuidObject);
+    CFRelease(uuidObject);
+    return [uuidStr autorelease];
+}
+
+
+/*邮箱验证 MODIFIED BY HELENSONG*/
++(BOOL)isValidateEmail:(NSString *)email
+{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:email];
+}
+
+/*手机号码验证 MODIFIED BY HELENSONG*/
++(BOOL) isValidateMobile:(NSString *)mobile
+{
+    //手机号以13， 15，18开头，八个 \d 数字字符
+    NSString *phoneRegex = @"^((13[0-9])|(15[^4,\\D])|(18[0,0-9]))\\d{8}$";
+    NSPredicate *phoneTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",phoneRegex];
+    //    NSLog(@"phoneTest is %@",phoneTest);
+    return [phoneTest evaluateWithObject:mobile];
+}
+
+/*车牌号验证 MODIFIED BY HELENSONG*/
++(BOOL) validateCarNo:(NSString*) carNo
+{
+    NSString *carRegex = @"^[A-Za-z]{1}[A-Za-z_0-9]{5}$";
+    NSPredicate *carTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",carRegex];
+    NSLog(@"carTest is %@",carTest);
+    return [carTest evaluateWithObject:carNo];
+}
+
+#pragma mark Util Color
+
++ (UIColor *)rgbColor:(char*)color
+{
+    int Red = 0, Green = 0, Blue = 0;
+    sscanf(color, "%2x%2x%2x", &Red, &Green, &Blue);
+    return [UIColor colorWithRed:Red/255.0 green:Green/255.0 blue:Blue/255.0 alpha:1.0];
+}
+
+#pragma mark Util dict converse to json
+
++ (NSString *)dictToJson:(NSMutableDictionary *)dict
+{
+    NSArray *arr = [[NSArray alloc] initWithObjects:dict, nil];
+    NSError *err = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&err];
+    [arr release];
+    NSString *str = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    return str;
+}
+
++ (NSDictionary *)jsonToDict:(NSString *)jsonStr
+{
+    NSError* error=nil;
+    NSDictionary *resDict = [NSJSONSerialization JSONObjectWithData:[jsonStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&error];
+    
+   // NSLog(@"resDict:%@",resDict);
+    return resDict;
+
+}
+
++ (NSArray *)jsonToArr:(NSString *)jsonStr
+{
+    NSError* error=nil;
+    NSArray *resArr = nil;
+    if (jsonStr!=nil && ![jsonStr isEqual:[NSNull null]])
+    {
+        resArr = [NSJSONSerialization JSONObjectWithData:[jsonStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableLeaves error:&error];
+    }
+    // NSLog(@"resDict:%@",resDict);
+    return resArr;
+}
+
++ (NSString *)arrToJson:(NSArray *)arr
+{
+    if(arr)
+    {
+    NSError *err = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&err];
+    NSString *str = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    return str;
+    }
+    else
+    {
+        return nil;
+    }
+}
+
++ (NSString *)getTimestamp
+{
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970]*1000;
+    NSString *timeStr = [NSString stringWithFormat:@"%lld", (long long)time];
+    return timeStr;
+}
+
+
++(NSString *)timestampToStringDate:(NSTimeInterval)seconds
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy.MM.dd"];
+    NSString *res = [formatter stringFromDate:date];
+    
+    [formatter release];
+    return res;
+}
+
++ (long)stringDateConvToLongDate:(NSString *)DateStr
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+    NSDate *date = [formatter dateFromString:DateStr];
+    NSDate *tDate = [NSDate dateWithTimeIntervalSince1970:0];
+    NSTimeInterval time = [date timeIntervalSinceDate:tDate];
+    long dateTime = time*1000;
+    [formatter release];
+    return dateTime;
+}
+
++ (NSString *)timestampStringForRFC3339DateTimeString:(NSString *)rfc3339DateTimeString {
+    /*
+     Returns a user-visible date time string that corresponds to the specified
+     RFC 3339 date time string. Note that this does not handle all possible
+     RFC 3339 date time strings, just one of the most common styles.
+     */
+    
+    NSDateFormatter *rfc3339DateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+//    NSLocale *enUSPOSIXLocale = [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"] autorelease];
+    
+    [rfc3339DateFormatter setLocale:[NSLocale currentLocale]];
+    [rfc3339DateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZ'"];
+    [rfc3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    
+    // Convert the RFC 3339 date time string to an NSDate.
+    NSDate *date = [rfc3339DateFormatter dateFromString:rfc3339DateTimeString];
+    
+    long long interval = 0;
+    if (date != nil)
+    {
+        interval = 1000 * [date timeIntervalSince1970];
+    }
+    
+    return [NSString stringWithFormat:@"%lld",interval];
+}
+
++ (void)playShake
+{
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
++ (void)playSound
+{
+    static SystemSoundID soudId = 0;
+    NSString *path = [[NSBundle bundleWithIdentifier:@"com.apple.UIKit"] pathForResource:@"Tock" ofType:@"aiff"];
+    if (path)
+    {
+        AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soudId);
+    }
+    AudioServicesPlaySystemSound(soudId);
+}
+
+
++(void)UIImageFromURL:(NSURL*)url  withImageBlock:(void(^)(UIImage * image))imageBlock errorBlock:(void(^)())errorBlock
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSCachedURLResponse *response = [ZacCache getCachedResponseFromURL:url];
+        UIImage * image = [UIImage imageWithData:response.data];
+        UIImage * imageDefault = [UIImage imageNamed:@"4-01defaultImage"];
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+           if( image != nil ){
+               imageBlock( image );
+           }else{
+               imageBlock( imageDefault );
+               if(errorBlock != nil){
+                   errorBlock();
+               }
+           }
+        });
+    });
+}
+
++(void)UIImageFromURLStr:(NSString*)imgUrlStr  withImageBlock:(void(^)(UIImage * image))imageBlock /*errorBlock:(void(^)())errorBlock*/ defaultImageName:(NSString*)defaultImgName;
+
+{
+    if(IS_AVAILABLE(imgUrlStr) && [imgUrlStr length] != 0)
+    {
+        NSString *shortUrl = nil;
+//        if([imgUrlStr hasPrefix:kSERVER_FILE_URL])
+//        {
+//            shortUrl = [imgUrlStr stringByReplacingOccurrencesOfString:kSERVER_FILE_URL withString:@""];
+//        }
+//        else
+//        {
+            shortUrl = imgUrlStr;
+//        }
+        
+        UIImage* tmpImage = [[EGOCache globalCache] imageForKey:[shortUrl stringByReplacingOccurrencesOfString:@"/" withString:@"+"]];
+        if (tmpImage)
+        {
+            imageBlock( tmpImage );
+        }
+        else
+        {
+            
+            imageBlock([UIImage imageNamed:defaultImgName]);
+            
+            
+            dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^(void)
+                           {
+                               
+                               NSData * data = [[[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[kIMAGE_FILE_SERVER stringByAppendingString:shortUrl]]] autorelease];
+                               UIImage * image = [[[UIImage alloc] initWithData:data] autorelease];
+                               dispatch_async( dispatch_get_main_queue(), ^(void)
+                               {
+                                   if( image != nil )
+                                   {
+                                       
+                                       [[EGOCache globalCache] setImage:image forKey:[shortUrl stringByReplacingOccurrencesOfString:@"/" withString:@"+"]];
+                                       
+                                       imageBlock( image );
+                                       
+                                   }
+                                   else
+                                   {
+                                       imageBlock([UIImage imageNamed:defaultImgName]);
+                                   }
+                               });
+                           });
+        }
+    }
+    else
+    {
+        imageBlock([UIImage imageNamed:defaultImgName]);
+    }
+    
+    
+    
+}
+
++ (UIImage*)imageWithImageSimple:(UIImage*)image scaleToSize:(CGSize)newSize
+{
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
+//+ (UIColor *)colorFromRGB:(char *)str
+//{
+//    int r = sprintf(@"%x", str);
+//    int g = str[2] * 16 + str[3];
+//    int g = str[4] * 16 + str[5];
+//    UIColor *color = [UIColor colorWithRed:(CGFloat) green:(CGFloat) blue:(CGFloat) alpha:(CGFloat)]
+//}
+
++ (int)checkNetType
+{
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    
+    __block int type;
+    
+    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        switch (status)
+        {
+            case AFNetworkReachabilityStatusReachableViaWiFi:
+            {
+                NSLog(@"无线网络");
+                type = WIFI;
+            }
+                break;
+                
+            case AFNetworkReachabilityStatusReachableViaWWAN:
+            {
+                NSLog(@"3G网络");
+                type = WWAN;
+            }
+                break;
+                
+            case AFNetworkReachabilityStatusNotReachable:
+            {
+                NSLog(@"未连接");
+                type = NONET;
+            }
+                break;
+                
+            case AFNetworkReachabilityStatusUnknown:
+            {
+                NSLog(@"未知错误");
+                type = UNKNOW;
+            }
+                break;
+        }
+    }];
+    
+    return type;
+}
+
+@end

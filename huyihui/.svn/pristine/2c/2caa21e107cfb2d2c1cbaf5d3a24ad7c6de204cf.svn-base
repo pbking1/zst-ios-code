@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="Six-6K-M0n">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Six-6K-M0n" id="Cg7-3i-5oJ">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="89"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="金粉世家2013时尚手提包裸粉色" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="147" translatesAutoresizingMaskIntoConstraints="NO" id="Dgc-bx-r6S">
+                        <rect key="frame" x="79" y="16" width="147" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="150" id="NFd-Zf-4VU"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="颜色：裸粉色 尺码：M" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UqQ-84-vQ8">
+                        <rect key="frame" x="79" y="66" width="133" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥188" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ShV-69-boJ">
+                        <rect key="frame" x="271" y="16" width="36" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="x1" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IHN-1l-hMN">
+                        <rect key="frame" x="292" y="36" width="15" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nJM-Me-xiC">
+                        <rect key="frame" x="12" y="16" width="58" height="58"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="58" id="386-eP-dIq"/>
+                            <constraint firstAttribute="height" constant="58" id="657-2M-IcB"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="nJM-Me-xiC" firstAttribute="leading" secondItem="Cg7-3i-5oJ" secondAttribute="leading" constant="12" id="D0G-8c-eLr"/>
+                    <constraint firstItem="ShV-69-boJ" firstAttribute="top" secondItem="Cg7-3i-5oJ" secondAttribute="top" constant="16" id="I1n-eJ-enV"/>
+                    <constraint firstAttribute="trailing" secondItem="ShV-69-boJ" secondAttribute="trailing" constant="13" id="Jba-RD-ZI2"/>
+                    <constraint firstItem="Dgc-bx-r6S" firstAttribute="top" secondItem="Cg7-3i-5oJ" secondAttribute="top" constant="16" id="MzV-nr-O5i"/>
+                    <constraint firstItem="IHN-1l-hMN" firstAttribute="top" secondItem="Cg7-3i-5oJ" secondAttribute="top" constant="36" id="WJw-zq-Fib"/>
+                    <constraint firstItem="Dgc-bx-r6S" firstAttribute="leading" secondItem="Cg7-3i-5oJ" secondAttribute="leading" constant="79" id="WhQ-Zs-j3c"/>
+                    <constraint firstAttribute="bottom" secondItem="UqQ-84-vQ8" secondAttribute="bottom" constant="7" id="hw2-Xp-gbM"/>
+                    <constraint firstItem="UqQ-84-vQ8" firstAttribute="leading" secondItem="Cg7-3i-5oJ" secondAttribute="leading" constant="79" id="r7F-Po-6rD"/>
+                    <constraint firstAttribute="centerY" secondItem="nJM-Me-xiC" secondAttribute="centerY" constant="-0.5" id="ufL-r7-Cz4"/>
+                    <constraint firstAttribute="trailing" secondItem="IHN-1l-hMN" secondAttribute="trailing" constant="13" id="zSf-7r-1jy"/>
+                </constraints>
+            </tableViewCellContentView>
+        </tableViewCell>
+    </objects>
+</document>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="gFo-qy-Yvb" customClass="UICollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="106" height="168"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="4-01personal center_list__Material picture 01.png" translatesAutoresizingMaskIntoConstraints="NO" id="p7n-u1-19V">
+                    <rect key="frame" x="0.0" y="-3" width="106" height="90"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="90" id="Hks-HA-MJb"/>
+                        <constraint firstAttribute="width" constant="106" id="gVr-3A-VTm"/>
+                    </constraints>
+                </imageView>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="[女袜]韩国进口可爱纯棉袜" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZA9-LO-w5a">
+                    <rect key="frame" x="0.0" y="85" width="106" height="48"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="PGn-v1-bhU"/>
+                        <constraint firstAttribute="width" constant="106" id="jX5-mZ-5IL"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="￥3.98" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bmG-QC-3Jr">
+                    <rect key="frame" x="0.0" y="130" width="106" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="0.080152383229999999" blue="0.1055304431" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="middleTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYg-9j-VEQ">
+                    <rect key="frame" x="0.0" y="151" width="106" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <attributedString key="attributedText">
+                        <fragment content="￥">
+                            <attributes>
+                                <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <font key="NSFont" size="14" name="STHeitiSC-Light"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="truncatingMiddle" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="2.8">
+                            <attributes>
+                                <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="truncatingMiddle" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <constraints>
+                <constraint firstItem="ZA9-LO-w5a" firstAttribute="leading" secondItem="gFo-qy-Yvb" secondAttribute="leading" id="0vB-Fv-BH7"/>
+                <constraint firstItem="p7n-u1-19V" firstAttribute="leading" secondItem="gFo-qy-Yvb" secondAttribute="leading" id="EEf-WT-8d4"/>
+                <constraint firstItem="p7n-u1-19V" firstAttribute="top" secondItem="gFo-qy-Yvb" secondAttribute="top" constant="-3" id="WeI-Gf-Jdb"/>
+                <constraint firstItem="ZA9-LO-w5a" firstAttribute="top" secondItem="p7n-u1-19V" secondAttribute="bottom" constant="-2" id="p2i-5s-5un"/>
+            </constraints>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <image name="4-01personal center_list__Material picture 01.png" width="93" height="93"/>
+    </resources>
+</document>

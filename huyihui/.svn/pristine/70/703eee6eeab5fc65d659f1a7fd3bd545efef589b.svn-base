@@ -1,0 +1,32 @@
+//
+//  GroupBuyItemDetailViewController.h
+//  huyihui
+//
+//  Created by zaczh on 14-3-5.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "BaseViewController.h"
+#import "CarouselView.h"
+#import "ProductConstants.h"
+
+@interface GroupBuyItemDetailViewController : BaseViewController<UITableViewDataSource,UITableViewDelegate, UIScrollViewDelegate, CarouselViewDataSource,CarouselViewDelegate>
+@property (retain, nonatomic) IBOutlet UITableView *table;
+
+- (IBAction)onJoinGroupBuy:(id)sender;
+- (IBAction)onAddtoShoppingCart:(id)sender;
+- (IBAction)onAddToFavourite:(id)sender;
+- (IBAction)onAskForSupport:(id)sender;
+- (IBAction)sectionExpand:(id)sender;
+@property (retain, nonatomic) IBOutlet UIView *bottomView0;
+@property (retain, nonatomic) IBOutlet UIView *bottomView1;
+@property (retain, nonatomic) IBOutlet UIView *bottomView2;
+@property (retain, nonatomic) IBOutlet UILabel *prodcutCommentsCountLabel;
+@property (retain, nonatomic) IBOutlet UIButton *addToFavouriteBtn;
+
+@property(nonatomic, readonly) HuEasyProductType productType;
+
+- (id)initWithProductType:(HuEasyProductType)type;
+
+- (id)initWithProductInfo:(NSDictionary *)info andType:(HuEasyProductType)type;
+@end

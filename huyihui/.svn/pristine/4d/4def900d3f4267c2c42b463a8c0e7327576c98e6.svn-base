@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="121" id="qAg-pb-fCp">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="121"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qAg-pb-fCp" id="dYh-cW-Ay0">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VWE-t6-zeM">
+                        <rect key="frame" x="10" y="10" width="100" height="100"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="fiA-mK-G2r"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="买一送三 Mamnode梦妆花颜 凝时致护面三" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="194" translatesAutoresizingMaskIntoConstraints="NO" id="aDf-rd-tI4">
+                        <rect key="frame" x="118" y="10" width="194" height="36"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="60" id="gAI-Nj-54P"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥399" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VtH-NL-GbO">
+                        <rect key="frame" x="118" y="73" width="46" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="￥1024" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vaQ-0d-pHF">
+                        <rect key="frame" x="172" y="78" width="43" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3.8折" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MsK-s3-96M">
+                        <rect key="frame" x="223" y="78" width="32" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2320人已购买" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUh-8J-SPL">
+                        <rect key="frame" x="120" y="97" width="82" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="vaQ-0d-pHF" firstAttribute="leading" secondItem="VtH-NL-GbO" secondAttribute="trailing" constant="8" id="030-c7-bkh"/>
+                    <constraint firstItem="nUh-8J-SPL" firstAttribute="top" secondItem="MsK-s3-96M" secondAttribute="bottom" constant="3" id="4yz-vo-SYz"/>
+                    <constraint firstItem="aDf-rd-tI4" firstAttribute="leading" secondItem="VWE-t6-zeM" secondAttribute="trailing" constant="8" id="944-F9-K8E"/>
+                    <constraint firstItem="VtH-NL-GbO" firstAttribute="leading" secondItem="VWE-t6-zeM" secondAttribute="trailing" constant="8" id="JJP-78-z0F"/>
+                    <constraint firstItem="nUh-8J-SPL" firstAttribute="top" secondItem="VtH-NL-GbO" secondAttribute="bottom" constant="3" id="Unt-w8-bh2"/>
+                    <constraint firstAttribute="bottom" secondItem="VWE-t6-zeM" secondAttribute="bottom" constant="10" id="coK-mK-4a6"/>
+                    <constraint firstItem="VWE-t6-zeM" firstAttribute="leading" secondItem="dYh-cW-Ay0" secondAttribute="leading" constant="10" id="g1Z-uI-r4y"/>
+                    <constraint firstItem="MsK-s3-96M" firstAttribute="leading" secondItem="vaQ-0d-pHF" secondAttribute="trailing" constant="8" id="kEg-rA-qW9"/>
+                    <constraint firstItem="VWE-t6-zeM" firstAttribute="top" secondItem="dYh-cW-Ay0" secondAttribute="top" constant="10" id="kGQ-z7-gWY"/>
+                    <constraint firstItem="nUh-8J-SPL" firstAttribute="leading" secondItem="VWE-t6-zeM" secondAttribute="trailing" constant="10" id="lbI-LL-Lvy"/>
+                    <constraint firstItem="aDf-rd-tI4" firstAttribute="top" secondItem="dYh-cW-Ay0" secondAttribute="top" constant="10" id="piw-cr-8Z7"/>
+                    <constraint firstAttribute="bottom" secondItem="nUh-8J-SPL" secondAttribute="bottom" constant="7" id="sN1-S0-Anq"/>
+                    <constraint firstItem="nUh-8J-SPL" firstAttribute="top" secondItem="vaQ-0d-pHF" secondAttribute="bottom" constant="3" id="tbb-Oc-gzr"/>
+                    <constraint firstAttribute="trailing" secondItem="aDf-rd-tI4" secondAttribute="trailing" constant="8" id="y2Y-DI-qZw"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="tintColor" red="0.72549019609999998" green="0.72549019609999998" blue="0.72549019609999998" alpha="1" colorSpace="calibratedRGB"/>
+        </tableViewCell>
+    </objects>
+</document>

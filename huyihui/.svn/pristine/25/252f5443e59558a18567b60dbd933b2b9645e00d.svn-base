@@ -1,0 +1,531 @@
+//
+//  AppDelegate.m
+//  huyihui
+//
+//  Created by linyi on 14-2-19.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "AppDelegate.h"
+#import "Util.h"
+#import "LoginViewController.h"
+#import "AlixPay.h"
+#import "AlixPayResult.h"
+#import "DataVerifier.h"
+#import <sys/utsname.h>
+//#import "ChooseReceiptType.h"
+//#import "CheckOutCenterViewController.h"
+//#import "MoreConfigure.h"
+#import <ShareSDK/ShareSDK.h>
+#import <TencentOpenAPI/QQApiInterface.h>
+#import <TencentOpenAPI/TencentOAuth.h>
+
+
+@interface AppDelegate()
+@property (assign, nonatomic) BOOL isLoggedIn;
+@property (nonatomic, copy) NSDictionary *userInfo;
+@property (nonatomic, retain) UITabBarController *tabs;
+@property (nonatomic, copy) NSDictionary *merchantInfo;//商家信息，只读
+@end
+
+@implementation AppDelegate
+@synthesize tabs;
+@synthesize currentCtroller=_currentCtroller;
+@synthesize regionsListArr=_regionsListArr;
+
+- (void)dealloc
+{
+    [tabs release];
+    [_window release];
+    [_tempParam release];
+    self.wbtoken = nil;
+    self.regionsListArr=nil;
+    [super dealloc];
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    // Override point for customization after application launch.
+    
+    
+    //    _merchantId = @"13040811180531200001";
+    _merchantId = @"13080815193235900001";//新的商家ID
+    [NUSD setObject:_merchantId forKey:kMerchantId];
+    [self performSelectorInBackground:@selector(getMerchantInfoFromServer) withObject:nil];
+    
+    [ShareSDK registerApp:ShareSDKAppKey];
+    //添加新浪微博应用
+    [ShareSDK connectSinaWeiboWithAppKey:@"1282411068"
+                               appSecret:@"076c9e4ce62839acd5d72cbf5291fb1c"
+                             redirectUri:@"https://api.weibo.com/oauth2/default.html"];
+    
+    //添加腾讯微博应用
+    [ShareSDK connectTencentWeiboWithAppKey:@"801213517"
+                                  appSecret:@"9819935c0ad171df934d0ffb340a3c2d"
+                                redirectUri:@"http://www.ying7wang7.com"];
+    
+    //添加QQ空间应用
+    [ShareSDK connectQZoneWithAppKey:@"100371282"
+                           appSecret:@"aed9b0303e3ed1e27bae87c33761161d"
+                   qqApiInterfaceCls:[QQApiInterface class]
+                     tencentOAuthCls:[TencentOAuth class]];
+    
+    //添加豆瓣应用
+    [ShareSDK connectDoubanWithAppKey:@"07d08fbfc1210e931771af3f43632bb9"
+                            appSecret:@"e32896161e72be91"
+                          redirectUri:@"http://dev.kumoway.com/braininference/infos.php"];
+    
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+
+        
+    [self createTabBarController];
+//    UINavigationController *navi = [[UINavigationController alloc] initWithRootViewController:[[CheckOutCenterViewController new] autorelease]];
+//    self.window.rootViewController = navi;
+//    [navi release];
+    [NSThread detachNewThreadSelector:@selector(updateProvinceFromServer) toTarget:self withObject:nil ];
+    
+    //设置网络图片获取模式（其中判断网络连接状态）//
+    [self updateUserPreferredImageQuality];
+    //[NSThread detachNewThreadSelector:@selector(updateUserPreferredImageQuality) toTarget:self withObject:nil ];
+
+    
+    [self.window makeKeyAndVisible];
+//    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert];
+//    
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    
+    return YES;
+}
+
+- (void)loggedOut
+{
+    [NUSD removeObjectForKey:kCurrentUserName];
+    [NUSD removeObjectForKey:kCurrentUserId];
+    self.isLoggedIn = NO;
+    
+    self.userInfo = nil;
+    
+    self.tabs.selectedIndex = 0;
+    
+    //退出登录后清空购物车
+    [[HuEasyShoppingCart sharedInstance] clearAfterLogoutCompletion:nil];
+}
+
+- (void)loggedInWithUserInfo:(NSDictionary *)userInfo completion:(void(^)())completionBlock
+{
+    self.isLoggedIn = YES;
+    self.userInfo = userInfo;
+    
+    [NUSD setObject:[userInfo objectForKey:@"userKo"] forKey:kCurrentUserId];
+    [NUSD setObject:[userInfo objectForKey:@"account"] forKey:kCurrentUserName];
+    [NUSD setObject:userInfo[@"email"] forKey:kCurrentUserEmail];
+    [NUSD synchronize];
+    
+    NSAssert([NUSD objectForKey:kCurrentUserToken] != nil && ![[NUSD objectForKey:kCurrentUserToken] isEqual:[NSNull null]], @"User token can't be null!");
+    
+    //登录后同步购物车
+    [CustomBezelActivityView activityViewForView:self.window];
+    [[HuEasyShoppingCart sharedInstance] syncCompletion:^{
+        if(completionBlock != nil){
+            completionBlock();
+        }
+        [CustomBezelActivityView removeViewAnimated:YES];
+    }];
+}
+
+-(void)getMerchantInfoFromServer
+{
+    NSMutableDictionary *params=[[NSMutableDictionary alloc] init];
+    [params setObject:APP_DELEGATE.merchantId forKey:@"merchantId"];
+    [RemoteManager PostAsync:kGET_MERCHANT_INFO Parameters:params WithBlock:^(id json, NSError *error) {
+        if (error==nil){
+            self.merchantInfo = json[@"merchantBaseInfo"];
+        }
+    }];
+    [params release];
+}
+
+- (void)createTabBarController
+{
+    
+    tabs = [[UITabBarController alloc] init];
+    tabs.delegate = self;
+//    tabs.tabBar.tintColor = [Util rgbColor:"E22930"];
+    tabs.tabBar.tintColor = [UIColor whiteColor];
+    
+    HomePageViewController *home = [[HomePageViewController alloc] init];
+    home.title = @"首页";
+    UINavigationController *homeNavi = [[UINavigationController alloc] initWithRootViewController:home];
+    [home release];
+    UITabBarItem *homeItem = [[[UITabBarItem alloc] initWithTitle:@"首页" image:[UIImage imageNamed:@"tab_home_normal"] tag:0] autorelease];
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        homeItem.selectedImage = [[UIImage imageNamed:@"tab_home_highlight"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        homeItem.image = [[UIImage imageNamed:@"tab_home_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }else{
+        [homeItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_home_highlight"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_home_normal"]];
+    }
+    [homeItem setTitleTextAttributes:@{UITextAttributeTextColor:[UIColor colorWithRed:225/255.0 green:40/255.0 blue:48/255.0 alpha:1.0]} forState:UIControlStateSelected];
+    [homeNavi setTabBarItem:homeItem];
+
+    
+    
+    ProductSearchViewController *search = [[ProductSearchViewController alloc] init];
+    search.title = @"搜索";
+    UINavigationController *searchNavi = [[UINavigationController alloc] initWithRootViewController:search];
+    [search release];
+    UITabBarItem *searchItem = [[[UITabBarItem alloc] initWithTitle:@"搜索" image:[UIImage imageNamed:@"tab_search_normal"] tag:0] autorelease];
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        searchItem.selectedImage = [[UIImage imageNamed:@"tab_search_highlight"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        searchItem.image = [[UIImage imageNamed:@"tab_search_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }else{
+        [searchItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_search_highlight"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_search_normal"]];
+    }
+    [searchItem setTitleTextAttributes:@{UITextAttributeTextColor:[UIColor colorWithRed:225/255.0 green:40/255.0 blue:48/255.0 alpha:1.0]} forState:UIControlStateSelected];
+    [searchNavi setTabBarItem:searchItem];
+    
+    ShoppingCartViewController *cart = [[ShoppingCartViewController alloc] init];
+    UINavigationController *cartNavi = [[UINavigationController alloc] initWithRootViewController:cart];
+    cart.title = @"购物车";
+    [cart release];
+    UITabBarItem *cartItem = [[[UITabBarItem alloc] initWithTitle:@"购物车" image:[UIImage imageNamed:@"tab_shoppingcart_normal"] tag:0] autorelease];
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        cartItem.selectedImage = [[UIImage imageNamed:@"tab_shoppingcart_highlight"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        cartItem.image = [[UIImage imageNamed:@"tab_shoppingcart_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }else{
+        [cartItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_shoppingcart_highlight"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_shoppingcart_normal"]];
+    }
+    [cartItem setTitleTextAttributes:@{UITextAttributeTextColor:[UIColor colorWithRed:225/255.0 green:40/255.0 blue:48/255.0 alpha:1.0]} forState:UIControlStateSelected];
+    [cartNavi setTabBarItem:cartItem];
+    
+    MinePageViewController *mine = [[MinePageViewController alloc]initWithNibName:@"MinePageViewController" bundle:nil];
+    UINavigationController *mineNavi = [[UINavigationController alloc] initWithRootViewController:mine];
+    mine.title = @"个人中心";
+    [mine release];
+    UITabBarItem *mineItem = [[[UITabBarItem alloc] initWithTitle:@"我" image:[UIImage imageNamed:@"tab_personal homepage_normal"] tag:0] autorelease];
+    mineItem.title = @"我";
+    [mineItem setTitleTextAttributes:@{UITextAttributeTextColor:[UIColor colorWithRed:225/255.0 green:40/255.0 blue:48/255.0 alpha:1.0]} forState:UIControlStateSelected];
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")){
+        mineItem.selectedImage = [[UIImage imageNamed:@"tab_personal homepage_highlight"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        mineItem.image = [[UIImage imageNamed:@"tab_personal homepage_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }else{
+        [mineItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_personal homepage_highlight"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_personal homepage_normal"]];
+    }
+    [mineNavi setTabBarItem:mineItem];
+
+//    [tabs.tabBar setBackgroundImage:[UIImage imageNamed:@"tap _background"]];
+//    [tabs.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@""]];
+    
+    [tabs setViewControllers:@[homeNavi,searchNavi,cartNavi,mineNavi]];
+    
+    [homeNavi release];
+    [searchNavi release];
+    [cartNavi release];
+    [mineNavi release];
+    
+    self.window.rootViewController = tabs;
+//    CoordinatingController *coordinatingController = [CoordinatingController sharedInstance];
+//    [[tabs.viewControllers objectAtIndex:0] addChildViewController:[coordinatingController activeViewController]];
+//    [[tabs.viewControllers objectAtIndex:1] addChildViewController:[coordinatingController activeSearchViewController]];
+//    [[tabs.viewControllers objectAtIndex:2] addChildViewController:[coordinatingController activeShoppingViewController]];
+//    [[tabs.viewControllers objectAtIndex:3] addChildViewController:[coordinatingController activeMineViewController]];
+//    [coordinatingController release];
+}
+
+//- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController{
+//    return !(tabBarController.selectedViewController==viewController);
+//}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    NSLog(@"My token is:%@", deviceToken);
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"failed to get token,error:%@", error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+//    NSLog(@"Receive remote notification:%@,%@", userInfo,[userInfo class]);
+//    NSLog(@"%@",[userInfo objectForKey:@"aps"]);
+//    
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:[[userInfo objectForKey:@"aps"] objectForKey:@"alert"] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//    [alert show];
+//    [alert release];
+}
+
+- (void)didReceiveWeiboRequest:(WBBaseRequest *)request
+{
+    if ([request isKindOfClass:WBProvideMessageForWeiboRequest.class])
+    {
+        
+    }
+}
+
+- (void)didReceiveWeiboResponse:(WBBaseResponse *)response
+{
+    if ([response isKindOfClass:WBSendMessageToWeiboResponse.class])
+    {
+        NSString *title = @"发送结果";
+        NSString *message = [NSString stringWithFormat:@"响应状态: %d\n响应UserInfo数据: %@\n原请求UserInfo数据: %@",(int)response.statusCode, response.userInfo, response.requestUserInfo];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+//                                                        message:message
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"确定"
+//                                              otherButtonTitles:nil];
+//        [alert show];
+//        [alert release];
+        NSLog(@"%@:%@", title, message);
+    }
+    else if ([response isKindOfClass:WBAuthorizeResponse.class])
+    {
+        NSString *title = @"认证结果";
+        NSString *message = [NSString stringWithFormat:@"响应状态: %d\nresponse.userId: %@\nresponse.accessToken: %@\n响应UserInfo数据: %@\n原请求UserInfo数据: %@",(int)response.statusCode,[(WBAuthorizeResponse *)response userID], [(WBAuthorizeResponse *)response accessToken], response.userInfo, response.requestUserInfo];
+        
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+//                                                        message:message
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"确定"
+//                                              otherButtonTitles:nil];
+//        
+//        self.wbtoken = [(WBAuthorizeResponse *)response accessToken];
+//        
+//        [alert show];
+        //        [alert release];
+        NSLog(@"%@:%@", title, message);
+    }
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [WeiboSDK handleOpenURL:url delegate:self] || [self parseURL:url application:application] ;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return [WeiboSDK handleOpenURL:url delegate:self] || [self parseURL:url application:application] ;
+}
+
+//支付宝支付回调
+- (BOOL)parseURL:(NSURL *)url application:(UIApplication *)application {
+	AlixPay *alixpay = [AlixPay shared];
+	AlixPayResult *result = [alixpay handleOpenURL:url];
+    BOOL res=NO;
+	if (result) {
+		//是否支付成功
+		if (9000 == result.statusCode) {
+			/*
+			 *用公钥验证签名
+			 */
+			id<DataVerifier> verifier = CreateRSADataVerifier([[NSBundle mainBundle] objectForInfoDictionaryKey:@"RSA public key"]);
+			if ([verifier verifyString:result.resultString withSign:result.signString]) {
+				UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+																	 message:result.statusMessage
+																	delegate:nil
+														   cancelButtonTitle:@"确定"
+														   otherButtonTitles:nil];
+				[alertView show];
+				[alertView release];
+			}//验签错误
+			else {
+				UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+																	 message:@"签名错误"
+																	delegate:nil
+														   cancelButtonTitle:@"确定"
+														   otherButtonTitles:nil];
+				[alertView show];
+				[alertView release];
+			}
+		}
+		//如果支付失败,可以通过result.statusCode查询错误码
+		else {
+			UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+																 message:result.statusMessage
+																delegate:nil
+													   cancelButtonTitle:@"确定"
+													   otherButtonTitles:nil];
+			[alertView show];
+			[alertView release];
+		}
+		res = YES;
+	}
+    return res;
+}
+
+-(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+{
+    if (tabBarController.viewControllers[3] == viewController)
+    {
+        if (!self.isLoggedIn)
+        {
+            LoginViewController *loginCtrl=[[LoginViewController alloc]initWithNibName:@"LoginViewController" bundle:nil];
+            loginCtrl.successBlock=^(void){
+
+                APP_DELEGATE.tabs.selectedIndex=3;
+            };
+            UINavigationController *naviLogin=[[UINavigationController alloc]initWithRootViewController:loginCtrl];
+            [APP_DELEGATE.tabs.selectedViewController presentViewController:naviLogin animated:YES completion:nil];
+            [loginCtrl release];
+            [naviLogin release];
+            return false;
+           
+
+        }
+        else
+        {
+            return true;
+        }
+        
+    }
+    else
+    {
+        return true;
+    }
+    
+    return true;
+    
+}
+
+#pragma mark get ProvinceAndCityList
+
+-(void)updateProvinceFromServer
+{
+    @autoreleasepool
+    {
+        NSMutableDictionary *params=[[NSMutableDictionary alloc]init];
+        [RemoteManager PostAsync:kGET_PROVINCEINFO Parameters:nil WithBlock:^(id json, NSError *error) {
+            if (error==nil) {
+//                NSLog(@"%d",[[json objectForKey:@"regionsList"]count]);
+//                NSLog(@"%@",json);
+                NSMutableArray *plistArr=[[NSMutableArray alloc]init];
+                self.regionsListArr=[[json objectForKey:@"regionsList"]mutableCopy];
+                
+                NSMutableArray *tmpArr=[[NSMutableArray alloc]init];
+                for (int i=0;i<4;i++)
+                {
+                    [tmpArr addObject:[self newPlistFile:[NSMutableDictionary dictionaryWithDictionary:[self.regionsListArr objectAtIndex:i]]]];
+                }
+                
+                for (int i=0;i<[tmpArr count];i++)
+                {
+                    NSMutableDictionary *dic=[tmpArr objectAtIndex:i];
+                    if ([[dic objectForKey:@"id"]intValue]==2)
+                    {
+                        [plistArr addObjectsFromArray:[dic objectForKey:@"subArr"]];
+                        [tmpArr removeObject:dic];
+                        
+                    }
+                }
+                [plistArr addObjectsFromArray:tmpArr];
+                [tmpArr release];
+
+                
+                NSString *plistFilePath=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/region.plist"];
+                [plistArr writeToFile:plistFilePath atomically:YES];
+           
+                [plistArr release];
+                
+            }
+        }];
+        [params release];
+        
+    }
+    
+}
+-(NSMutableDictionary *)newPlistFile:(NSMutableDictionary *)parentDic
+{
+    
+    NSMutableArray *subArr=[[[NSMutableArray alloc]init]autorelease];
+    
+    for (NSMutableDictionary *Dic in self.regionsListArr)
+    {
+        
+        
+        if ([[parentDic objectForKey:@"id"]isEqual:[Dic objectForKey:@"parentId"]])
+        {
+            
+            NSMutableDictionary *subDic=[self newPlistFile:[NSMutableDictionary dictionaryWithDictionary:Dic]];
+            [subArr addObject:subDic];
+            
+            
+            
+        }
+        if ([subArr count])
+        {
+            [parentDic setObject:subArr forKey:@"subArr"];
+        }
+        
+        
+    }
+    
+    
+    return parentDic;
+    
+}
+#pragma mark updateUserPreferredImageQuality://设置网络图片获取模式//
+-(void)updateUserPreferredImageQuality
+{
+    //@autoreleasepool
+    //{
+        //预设初始值
+        int UserPreferredImageQuality_Mode=0; //0 智能模式(默认)，1 高质量，2 普通， >根据模式再去决定具体取图标准值
+        int UserPreferredImageQuality_Value=0;//0：2G/3G(使用标清图),  1：wifi（使用高清图）
+        //取出先前设置的模式
+        UserPreferredImageQuality_Mode=[[NUSD objectForKey:kUserPreferredImageQuality] integerValue];
+        //三模式去处理
+        if(UserPreferredImageQuality_Mode==0){//智能模式才需要判断网络去决定取图质量标准
+            int currentNetType=[Util checkNetType];
+            NSLog(@"WIFI=1,WWAN=2,NONET=3,UNKNOW=4,\n, currentNetType:%d",currentNetType);
+            if(currentNetType==1){//智能模式下wifi用高清图
+                NSLog(@"智能模式下wifi用高清图...");
+                UserPreferredImageQuality_Value=1;
+            }else if (currentNetType==2){//智能模式下wlan用标清图
+                NSLog(@"智能模式下wlan用标清图");
+                UserPreferredImageQuality_Value=0;
+            }else if(currentNetType==3){
+                NSLog(@"当前网络似乎未连接...");
+            }else{
+                NSLog(@"当前网络判断出错...");
+            }
+            UserPreferredImageQuality_Value=0;//默认使用标清图
+        }else if(UserPreferredImageQuality_Mode==1){//强制高清图模式
+            UserPreferredImageQuality_Value=1;//默认使用标清图
+        }else if(UserPreferredImageQuality_Mode==2){//强制普通图模式
+            UserPreferredImageQuality_Value=0;//默认使用标清图
+        }
+        //
+        self.userPreferredImageQuality_Value=UserPreferredImageQuality_Value;
+    //}
+    
+}
+
+
+@end

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UsingCouponViewController">
+            <connections>
+                <outlet property="btnOK" destination="j2j-gu-nwp" id="Qam-EK-XDa"/>
+                <outlet property="table" destination="H2n-Og-93s" id="OJA-nA-6yW"/>
+                <outlet property="view" destination="VdM-YG-Xxb" id="Avs-fF-iAE"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="VdM-YG-Xxb">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="H2n-Og-93s">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <view key="tableHeaderView" contentMode="scaleToFill" id="jUI-nO-xOp">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请选择可用优惠券" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lF0-sC-OKG">
+                                <rect key="frame" x="112" y="17" width="96" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.50588235290000005" green="0.50588235290000005" blue="0.50588235290000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="lF0-sC-OKG" secondAttribute="centerX" id="9NL-4e-7MU"/>
+                            <constraint firstItem="lF0-sC-OKG" firstAttribute="top" secondItem="jUI-nO-xOp" secondAttribute="top" constant="17" id="VlL-u2-9PD"/>
+                            <constraint firstAttribute="height" constant="40" id="awb-fj-zAi"/>
+                            <constraint firstAttribute="width" constant="320" id="ir5-9f-4Nu"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="9Z2-m7-x5b"/>
+                        <outlet property="delegate" destination="-1" id="MyM-gd-DW3"/>
+                    </connections>
+                </tableView>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ytp-uG-oyX" userLabel="tableView placeholder" colorLabel="IBBuiltInLabel-Orange">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1-03discount coupon_table_placeholder.png" translatesAutoresizingMaskIntoConstraints="NO" id="4Fp-7P-cZQ">
+                            <rect key="frame" x="97" y="150" width="126" height="126"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        </imageView>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="暂无优惠券" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3WS-Gj-K4I">
+                            <rect key="frame" x="123" y="284" width="75" height="18"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="0.47843137250000001" green="0.49019607840000001" blue="0.49803921569999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="快去领取吧" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a8w-kR-OyW">
+                            <rect key="frame" x="128" y="304" width="65" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="0.63921568630000003" green="0.63529411759999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="3WS-Gj-K4I" firstAttribute="top" secondItem="4Fp-7P-cZQ" secondAttribute="bottom" constant="8" id="51M-Oy-WrR"/>
+                        <constraint firstAttribute="centerX" secondItem="a8w-kR-OyW" secondAttribute="centerX" constant="-0.5" id="7tY-fY-VeH"/>
+                        <constraint firstAttribute="centerX" secondItem="4Fp-7P-cZQ" secondAttribute="centerX" id="QfV-6E-fhA"/>
+                        <constraint firstAttribute="centerX" secondItem="3WS-Gj-K4I" secondAttribute="centerX" constant="-0.5" id="Qy0-Pt-ipV"/>
+                        <constraint firstItem="4Fp-7P-cZQ" firstAttribute="top" secondItem="ytp-uG-oyX" secondAttribute="top" constant="150" id="RNE-n9-bKU"/>
+                        <constraint firstItem="a8w-kR-OyW" firstAttribute="top" secondItem="3WS-Gj-K4I" secondAttribute="bottom" constant="2" id="VCD-NF-EP3"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hKa-hb-CjL">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j2j-gu-nwp">
+                            <rect key="frame" x="123" y="5" width="75" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="确定" backgroundImage="tab_button2_normal.png">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="onDone:" destination="-1" eventType="touchUpInside" id="f0N-Jd-4es"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="dBR-jX-bk9"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.95294117649999999" green="0.94901960780000005" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="H2n-Og-93s" secondAttribute="bottom" constant="44" id="7br-TH-40j"/>
+                <constraint firstAttribute="trailing" secondItem="hKa-hb-CjL" secondAttribute="trailing" id="XqA-wt-e4V"/>
+                <constraint firstItem="H2n-Og-93s" firstAttribute="top" secondItem="VdM-YG-Xxb" secondAttribute="top" id="YHW-GL-6S2"/>
+                <constraint firstAttribute="trailing" secondItem="H2n-Og-93s" secondAttribute="trailing" id="arr-2w-EqQ"/>
+                <constraint firstAttribute="bottom" secondItem="hKa-hb-CjL" secondAttribute="bottom" id="c06-g9-6d3"/>
+                <constraint firstItem="hKa-hb-CjL" firstAttribute="leading" secondItem="VdM-YG-Xxb" secondAttribute="leading" id="erA-5P-Ia8"/>
+                <constraint firstItem="H2n-Og-93s" firstAttribute="top" secondItem="ytp-uG-oyX" secondAttribute="top" id="gTx-Z1-pea"/>
+                <constraint firstItem="H2n-Og-93s" firstAttribute="trailing" secondItem="ytp-uG-oyX" secondAttribute="trailing" id="myJ-xU-F9W"/>
+                <constraint firstItem="H2n-Og-93s" firstAttribute="leading" secondItem="VdM-YG-Xxb" secondAttribute="leading" id="r1b-rx-NhV"/>
+                <constraint firstItem="H2n-Og-93s" firstAttribute="leading" secondItem="ytp-uG-oyX" secondAttribute="leading" id="txo-gR-Ygd"/>
+                <constraint firstItem="H2n-Og-93s" firstAttribute="bottom" secondItem="ytp-uG-oyX" secondAttribute="bottom" id="zJy-6T-YhC"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="1-03discount coupon_table_placeholder.png" width="126" height="126"/>
+        <image name="tab_button2_normal.png" width="88" height="24"/>
+    </resources>
+</document>

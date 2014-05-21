@@ -1,0 +1,22 @@
+//
+//  UsingCouponViewController.h
+//  huyihui
+//
+//  Created by zaczh on 14-4-10.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "BaseViewController.h"
+
+@interface UsingCouponViewController : BaseViewController
+@property (retain, nonatomic) IBOutlet UITableView *table;
+@property (retain, nonatomic) IBOutlet UIView *tablePlaceholder;
+@property (retain, nonatomic) IBOutlet UILabel *couponSummaryLabel;
+
+@property (nonatomic, copy) void(^completionBlock)(NSDictionary *coupon);
+- (IBAction)onDone:(id)sender;
+@property (retain, nonatomic) IBOutlet UIButton *btnOK;
+
+- (id)initWithCode:(NSString *)code;
+
+@end

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AlipayNotifyURL</key>
+	<string>http://www.cndatacom.com/</string>
+	<key>AlipayPartnerId</key>
+	<string>gaga121421ga212</string>
+	<key>AlipayRSAPrivateKey</key>
+	<string>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDV77Ll08Mtv9iiAW4pyC8gS64v
+Me45ncnrXpSm6OjuRuBlUp8o2aXBYiRJOrrhOIO2FxVeLiiN5GH/1zEhmG+/wHcQ
+IhADiw74Ev8ZYFqujLbbyJTqhqLQpaQwuFGRrFE0YlanHYhofEpD9yTVaoiUOv+1
+jCi6OuIvkHrs7kWbkwIDAQAB</string>
+	<key>AlipayRSAPublicKey</key>
+	<string>MIICXgIBAAKBgQDV77Ll08Mtv9iiAW4pyC8gS64vMe45ncnrXpSm6OjuRuBlUp8o
+2aXBYiRJOrrhOIO2FxVeLiiN5GH/1zEhmG+/wHcQIhADiw74Ev8ZYFqujLbbyJTq
+hqLQpaQwuFGRrFE0YlanHYhofEpD9yTVaoiUOv+1jCi6OuIvkHrs7kWbkwIDAQAB
+AoGBAIAenLSmrSyox8O9t4uuJwrgR+Bbtp8qr9IVQlDzCwwnxhrn8Ak2zt2ROMni
+MijO/5H9IP7WBdN0AnyFExdbgw/qd1D4W6lo7kMhDqCkUNExJbFQl3JXf/BIy1q2
+qFFORFX2mI4H6p26dDsf9JwywsSRM4J08+GFsu3b3O+RM7CBAkEA8OiuFcywVT1A
+XVvjnLFpLOHKJmF+1zl6s4edMGrJ/VVq8axJ/cW4nkpYOg4jWVnF8V7caD/bJBzQ
+DO1wmE5QzQJBAONWeYgO7HzxrZdBuY3nv3cPZCSYofXXSFJcobYCfQWRNKcm8Rs3
+bmYt6HnhmbPj03rVoas50GpwtlnXghZ+Hd8CQAs7zmJV2SMgaA/yaPq1iyH8pWCE
+y1Vd6MrWWA4Z7LFTelkqn4il36YB8XtDjYJtHT3UHpL950oXzdvMdqOjg0ECQQCo
++JI2HZmKuHsk7JYFMlYuIUN2q/fdaRj5Fp6fULQqGiY/gwM8DnRBAChFxvfeLBz4
+tKaIRN1y77mphzPKkgyTAkEAgchbSDz5iKVmia4yrIw2gWc3VaTVgZJBJjwwQRiw
++CDqALUBqz63hpFfTY9eapcWo1cuB13AZcnjLb/pHdasZw==</string>
+	<key>AlipaySellerId</key>
+	<string>aljglajl1124</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>虎翼汇</string>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIcons</key>
+	<dict/>
+	<key>CFBundleIcons~ipad</key>
+	<dict/>
+	<key>CFBundleIdentifier</key>
+	<string>com.ChinaDataCom.MicroCoordination</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.weibo</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wb948671001</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>tencentopenapi</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tencent222222</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>AlixPayCDCScheme</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.ChinaDataCom.MicroCoordination</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.ChinaDataCom.MicroCoordination</string>
+			</array>
+			<key>use for</key>
+			<string>google+:以BundleID为URLSchemes回调</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb107704292745179</string>
+				<string>wb948671001</string>
+				<string>wx4868b35061f87885</string>
+				<string>QQ05FB8B52</string>
+				<string>QQ075BCD15</string>
+				<string>pocketapp1234</string>
+				<string>tencent100371282</string>
+				<string>wb801307650</string>
+				<string>rm226427cn.appgo.sharebyone</string>
+				<string>pin1432928</string>
+				<string>yx0d9a9f9088ea44d78680f3274da1765f</string>
+			</array>
+			<key>use for</key>
+			<string>QQ+AppId为版模式，新版为Tencent+AppId;别外人人网添加：rm+appID(你在人人申请应用的AppId)+BundleID</string>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+</dict>
+</plist>

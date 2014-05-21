@@ -1,0 +1,161 @@
+//
+//  MyProductRating.m
+//  huyihui
+//
+//  Created by zhangmeifu on 14/4/14.
+//  Copyright (c) 2014 linyi. All rights reserved.
+//
+
+#import "MyProductRating.h"
+
+
+@interface MyProductRating ()
+
+@end
+
+@implementation MyProductRating
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [NSThread detachNewThreadSelector:@selector(getDiscussFromServer) toTarget:self withObject:nil];
+}
+- (void)dealloc {
+    [_ratingTable release];
+    [super dealloc];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark tableView dataSource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    //    return [_ratingArr count];
+    return 3;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 2;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row==0)
+    {
+        NSString *text=@"好评值得推荐。发货和物流的速度都很快，店家的太多也不错。便宜实惠，质量也不错。";
+//        CGSize mySize=[text sizeWithFont:[UIFont systemFontOfSize:15] forWidth:SCREEN_WIDTH-200 lineBreakMode:NSLineBreakByWordWrapping];
+//        return (15+mySize.height);
+        return 75;
+    
+    }
+    else
+    {
+        return 73;
+        
+    }
+    
+    
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *productIdentifier=@"productCell";
+    static NSString *ratingIdentifier=@"ratingCell";
+    UITableViewCell *cell=nil;
+    if (indexPath.row==0)
+    {
+        cell=[tableView dequeueReusableCellWithIdentifier:ratingIdentifier];
+        if (cell==nil)
+        {
+            
+            cell=[[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ratingIdentifier]autorelease];
+            
+            UIView *view=[[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 11)]autorelease];
+            view.backgroundColor=[UIColor colorWithRed:0.941 green:0.937 blue:0.929 alpha:1.000];
+            [cell.contentView addSubview:view];
+            
+            UIImageView *imageView=[[[UIImageView alloc]init]autorelease];
+            imageView.tag=1;
+            imageView.userInteractionEnabled=NO;
+            
+            UIImage *image=[UIImage imageNamed:@"2-04Public Const LangProducts-rate"];
+            imageView.backgroundColor=[UIColor colorWithPatternImage:image];
+            
+            [imageView setFrame:CGRectMake(10, 20, 58, 14)];
+            [cell.contentView addSubview:imageView];
+            
+            UILabel *ratingTextLabel=[[[UILabel alloc]init]autorelease];
+            ratingTextLabel.tag=2;
+            ratingTextLabel.numberOfLines=0;
+            [ratingTextLabel setFont:[UIFont systemFontOfSize:14]];
+            ratingTextLabel.textColor=[UIColor grayColor];
+            [cell.contentView addSubview:ratingTextLabel];
+        
+            cell.selectionStyle=UITableViewCellSelectionStyleNone;
+            
+        }
+        
+        UIImageView *imageView=(UIImageView*)[cell viewWithTag:1];
+        UILabel *ratingTextLabel=(UILabel *)[cell viewWithTag:2];
+        ratingTextLabel.text=@"好评值得推荐。发货和物流的速度都很快，店家的太多也不错。便宜实惠，质量也不错。";
+        CGSize size=[ratingTextLabel.text sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH-10, INT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
+        [ratingTextLabel setFrame:CGRectMake(10, 35, SCREEN_WIDTH-10, size.height)];
+       
+        
+        
+        
+        
+        
+    }
+    else
+    {
+        [tableView registerNib:[UINib nibWithNibName:@"OrderCellView" bundle:nil] forCellReuseIdentifier:productIdentifier];
+        cell=[tableView dequeueReusableCellWithIdentifier:productIdentifier];
+        
+    }
+    
+    return cell;
+    
+}
+
+-(void)getDiscussFromServer
+{
+    @autoreleasepool {
+        NSMutableDictionary *params=[[NSMutableDictionary alloc]init];
+        [params setObject:[NUSD objectForKey:kCurrentUserId ] forKey:@"userKo"];
+        [params setObject:[NUSD objectForKey:kCurrentUserToken] forKey:@"token"];
+        [params setObject:APP_DELEGATE.merchantId forKey:@"merchantId"];
+        [params setObject:@5 forKey:@"num"];
+        [params setObject:@1 forKey:@"pageIndex"];
+        
+        [RemoteManager Posts:kGET_MYDISCUSSINFO Parameters:params WithBlock:^(id json, NSError *error) {
+            if (error==nil)
+            {
+                NSLog(@"%@",json);
+            }
+        }];
+        [params release];
+        
+        
+    }
+    
+}
+
+
+
+@end

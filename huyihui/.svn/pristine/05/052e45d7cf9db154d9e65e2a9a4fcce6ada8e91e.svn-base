@@ -1,0 +1,118 @@
+//
+//  RemoteManager.m
+//  huyihui
+//
+//  Created by linyi on 14-2-19.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "RemoteManager.h"
+#import "AFAppDotNetAPIClient.h"
+
+@implementation RemoteManager
+
++ (void)Posts:(NSString *)url Parameters:(NSDictionary *)dict WithBlock:(void(^)(id json, NSError *error))block
+{
+    [[AFAppDotNetAPIClient sharedClient] POST:url parameters:dict
+         success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if (block)
+         {
+             block(responseObject, nil);
+         }
+     }
+         failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         if (block)
+         {
+             block(nil, error);
+         }
+     }];
+}
+
++ (void)Gets:(NSString *)url Parameters:(NSDictionary *)dict WithBlock:(void(^)(id json, NSError *error))block
+{
+    [[AFAppDotNetAPIClient sharedClient] GET:url parameters:dict
+          success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if (block)
+         {
+             block(responseObject, nil);
+         }
+     }
+          failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         if (block)
+         {
+             block(nil, error);
+         }
+     }];
+}
+
+static NSString * const kAFCharactersToBeEscapedInQueryString = @":/?&=;+!@#$()',*";
+NSString * AFPercentEscapedQueryStringKeyFromStringWithEncoding(NSString *string, NSStringEncoding encoding) {
+    static NSString * const kAFCharactersToLeaveUnescapedInQueryStringPairKey = @"[].";
+    
+	return [(NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, (__bridge CFStringRef)kAFCharactersToLeaveUnescapedInQueryStringPairKey, (__bridge CFStringRef)kAFCharactersToBeEscapedInQueryString, CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
+}
+
+
++ (void)PostAsync:(NSString *)url Parameters:(NSDictionary *)dict WithBlock:(void(^)(id json, NSError *error))block{
+    NSMutableArray *arrM = [NSMutableArray new];
+    [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *value = [NSString stringWithFormat:@"%@",obj];
+        
+        
+        [arrM addObject:[NSString stringWithFormat:@"%@=%@",AFPercentEscapedQueryStringKeyFromStringWithEncoding(key,NSUTF8StringEncoding),
+                                AFPercentEscapedQueryStringKeyFromStringWithEncoding(value,NSUTF8StringEncoding)]];
+    }];
+    NSString *paramStr = [arrM componentsJoinedByString:@"&"];
+    [arrM release];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url relativeToURL:[NSURL URLWithString:kSERVER]] cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:15.0];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[NSData dataWithBytes:[paramStr UTF8String] length:strlen([paramStr UTF8String])]];
+    NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+    [request setValue:[NSString stringWithFormat:@"application/x-www-form-urlencoded; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
+    
+    NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
+    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse* response, NSData* data, NSError* error){
+        if(!data){
+            block(nil,error);
+        }else{
+            id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            block(json, error);
+        }
+    }];
+    
+    [request release];
+}
+
+//同步调用，测试接口用
++ (id)PostTest:(NSString *)url Parameters:(NSDictionary *)dict{
+    NSMutableArray *arrM = [NSMutableArray new];
+    [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *value = [NSString stringWithFormat:@"%@",obj];
+        
+        
+        [arrM addObject:[NSString stringWithFormat:@"%@=%@",AFPercentEscapedQueryStringKeyFromStringWithEncoding(key,NSUTF8StringEncoding),
+                         AFPercentEscapedQueryStringKeyFromStringWithEncoding(value,NSUTF8StringEncoding)]];
+    }];
+    NSString *paramStr = [arrM componentsJoinedByString:@"&"];
+    [arrM release];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url relativeToURL:[NSURL URLWithString:kSERVER]] cachePolicy:NSURLCacheStorageAllowedInMemoryOnly timeoutInterval:15.0];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[NSData dataWithBytes:[paramStr UTF8String] length:strlen([paramStr UTF8String])]];
+    NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+    [request setValue:[NSString stringWithFormat:@"application/x-www-form-urlencoded; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLResponse *response = nil;
+    NSError *err = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&err];
+    if(err){
+        NSLog(@"Error when testing %@, info: %@",url, err.description);
+    }
+    return [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+}
+@end

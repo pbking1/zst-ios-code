@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1" customClass="UICollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="119"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jDP-46-w1D">
+                    <rect key="frame" x="16" y="8" width="100" height="100"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="8AE-83-EnX"/>
+                        <constraint firstAttribute="height" constant="100" id="TM5-Sq-7jf"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GSI-fI-rmE">
+                    <rect key="frame" x="124" y="37" width="58" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HhO-K5-Bdy">
+                    <rect key="frame" x="190" y="49" width="46" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kse-36-tAV">
+                    <rect key="frame" x="254" y="49" width="46" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZAV-CE-Gfy">
+                    <rect key="frame" x="124" y="87" width="141" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="176" translatesAutoresizingMaskIntoConstraints="NO" id="swO-o4-xcM">
+                    <rect key="frame" x="124" y="8" width="176" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="HhO-K5-Bdy" firstAttribute="leading" secondItem="GSI-fI-rmE" secondAttribute="trailing" constant="8" id="7s5-bW-7Qj"/>
+                <constraint firstItem="ZAV-CE-Gfy" firstAttribute="top" secondItem="HhO-K5-Bdy" secondAttribute="bottom" constant="5" id="9dV-m5-l1b"/>
+                <constraint firstItem="GSI-fI-rmE" firstAttribute="leading" secondItem="jDP-46-w1D" secondAttribute="trailing" constant="8" id="A1X-by-DZI"/>
+                <constraint firstItem="HhO-K5-Bdy" firstAttribute="top" secondItem="swO-o4-xcM" secondAttribute="bottom" constant="20" id="CfD-0g-1e3"/>
+                <constraint firstItem="ZAV-CE-Gfy" firstAttribute="leading" secondItem="jDP-46-w1D" secondAttribute="trailing" constant="8" symbolic="YES" id="H41-Ww-Fda"/>
+                <constraint firstItem="kse-36-tAV" firstAttribute="top" secondItem="swO-o4-xcM" secondAttribute="bottom" constant="20" id="KGq-oK-WTZ"/>
+                <constraint firstItem="GSI-fI-rmE" firstAttribute="top" secondItem="swO-o4-xcM" secondAttribute="bottom" constant="15" id="TWG-L2-NAS"/>
+                <constraint firstItem="swO-o4-xcM" firstAttribute="leading" secondItem="jDP-46-w1D" secondAttribute="trailing" constant="8" id="X4K-hj-M25"/>
+                <constraint firstItem="jDP-46-w1D" firstAttribute="top" secondItem="1" secondAttribute="top" constant="8" id="bnt-SD-MIR"/>
+                <constraint firstItem="kse-36-tAV" firstAttribute="leading" secondItem="HhO-K5-Bdy" secondAttribute="trailing" constant="15" id="ieV-Wf-99H"/>
+                <constraint firstItem="swO-o4-xcM" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="tI7-CF-Nkc"/>
+                <constraint firstItem="jDP-46-w1D" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="16" id="veb-yk-jIf"/>
+                <constraint firstAttribute="trailing" secondItem="ZAV-CE-Gfy" secondAttribute="trailing" constant="55" id="wyG-YG-nAO"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

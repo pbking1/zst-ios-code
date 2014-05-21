@@ -1,0 +1,462 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+#import "BaseViewController.h"
+#import "AppDelegate.h"
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#endif
+
+#import "AFNetworking.h"
+#import "AFHTTPRequestOperation.h"
+#import "ButtonMacro.h"
+#import "UIButton+IdxAddtionButton.h"
+
+
+#define kTempParam @"param"
+
+//登录相关UserDefault keys
+#define kMerchantId @"merchantId"
+#define kCurrentUserId @"userId"
+#define kCurrentUserName @"userName"
+#define kCurrentUserToken @"token"
+#define kCurrentUserEmail @"userEmail"
+#define kUserDefaultAddress @"userDefaultAddress"
+
+//用户设置
+#define kUserPreferredImageQuality @"UserPreferredImageQuality" //0 智能模式(默认） 1 高质量 2 普通
+#define kUserPreferredNoticeType @"UserPreferredNoticeType" //0 接收通知 1 声音提醒 2 震动提醒
+#define kUserPreferredNotice @"UserPreferredNotice"
+#define kUserPreferredSound @"UserPreferredSound"
+#define kUserPreferredVibrate @"UserPreferredVibrate"
+
+//Keychain相关
+#define KEYCHAIN_IDENTIFIER @"myKeyChain"
+#define KEYCHAIN_ACCESS_GROUP @"c"
+#define kKEYCHAIN_USER_NAME kSecAttrAccount
+#define kKEYCHAIN_USER_PASSWORD kSecValueData
+#define kKEYCHAIN_USER_DOMAIN kSecAttrDescription
+
+////sinaweibo sdk
+//#import "WeiboSDK.h"
+//#define kAppKey         @"1282411068"
+//#define kRedirectURI    @"https://api.weibo.com/oauth2/default.html"
+//
+////tcweibo sdk
+//#define WiressSDKDemoAppKey     @"801213517"
+//#define WiressSDKDemoAppSecret  @"9819935c0ad171df934d0ffb340a3c2d"
+//#define REDIRECTURI             @"http://www.ying7wang7.com"
+
+#define ShareSDKAppKey @"11d058e8d27d"
+
+//network check
+#define WIFI    1
+#define WWAN  2
+#define NONET   3  
+#define UNKNOW  4
+
+/****************************测试环境***********************************/
+//#define kSERVER  @"http://192.168.116.11/hueasyApp/"
+
+#define kSERVER @"http://192.168.200.92:8080/hueasyApp/"
+//#define kSERVER @"http://192.168.200.93:8180/hueasyApp/"
+//#define kSERVER @"http://192.168.53.74/hueasyApp/"      //曾昭强本机IP
+//#define kSERVER @"http://113.108.137.84:8180/hueasyApp/"      //外网地址(只能在外网使用)
+#define kIMAGE_FILE_SERVER @"http://192.168.200.92:8080/"
+/**********************************************************************/
+
+/*
+1.1.1	热销商品查询接口信息描述
+接口名称	登录接口
+接口URL	http://192.168.116.11/hueasyApp/ware/getHotWareInfo.json
+*/
+#define kGET_HOT_WARE_INFO @"ware/getHotWareInfo.json"
+
+/*
+ 1.2.1	新品上市查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.116.11/hueasyApp/ware/getNewWareInfo.json
+ */
+#define kGET_NEW_WARE_INFO @"ware/getNewWareInfo.json"
+
+/*
+ 1.3.1	精品推荐查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.116.11/hueasyApp/ware/getRecommendInfo.json
+ */
+#define kGET_RECOMMEND_INFO @"ware/getRecommendInfo.json"
+
+
+/*
+ 1.4.1	商品搜索查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.116.11/hueasyApp/ware/getSearchInfo.json
+ */
+#define kGET_SEARCH_INFO @"ware/getSearchInfo.json"
+
+/*
+ 1.6.1	广告查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/ hueasyApp/ware/getPosterInfo.json
+ */
+#define kGET_POSTER_INFO @"ware/getPosterInfo.json"
+
+/*
+ 1.7.1	团购抢购接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/ hueasyApp/ware/getTuanKillInfo.json
+ */
+#define kGET_TUAN_KILL_INFO @"ware/getTuanKillInfo.json"
+
+/*
+ 1.8.1	团购秒杀商品分类目录查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/ware/getTuanKillCatalogueInfo.json
+ */
+#define kGET_TUAN_KILL_CATALOGUE_INFO @"ware/getTuanKillCatalogueInfo.json"
+
+/*
+ 1.9.1	团购秒杀商品单品页查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/ware/getTuanMiaoProductInfo.json
+ */
+#define kGET_TUAN_MIAO_PRODUCT_INFO @"ware/getTuanMiaoProductInfo.json"
+
+/*
+ 1.10.1	优惠券激活接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/activationCoupon.json
+ */
+#define kACTIVATION_COUPON @"subscriber/activationCoupon.json"
+
+/*
+1.11.1	优惠券查询接口信息描述
+接口名称	登录接口
+接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getSubscriberCoupon.json
+*/
+#define kGET_SUBSCRIBER_COUPON @"subscriber/getSubscriberCoupon.json"
+
+/*
+ 1.13.1	注册信息验证接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/login/checkSubscriberInfo.json
+ */
+#define kCHECK_SUBSCRIBER_INFO @"login/checkSubscriberInfo.json"
+
+/*
+ 1.13.1	用户注册接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/login/registration.json
+ */
+#define kREGISTRATION @"login/registration.json"
+
+/*
+ 1.13.1	用户登陆接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/login/login.json
+ */
+#define kLogin @"login/login.json"
+
+/*
+ 1.14.1	商品分类目录接口信息描述
+ 接口名称	登录接口
+ 接口URL	
+ */
+#define kCATALOG_INFO @"ware/getWareCatalogInfo.json"
+
+/*
+1.15.1	商品列表查询接口信息描述
+接口名称	登录接口
+接口URL
+ */
+#define kGET_WARELIST @"ware/getWareListInfo.json"
+
+/*
+1.18.1	1.16	商品列表页筛选接口信息描述
+接口名称	登录接口
+接口URL	http://192.168.200.92:8080/hueasyApp/ware/chooseColumnInfo.json
+*/
+#define kCHOOSE_COLUMNINFO  @"ware/chooseColumnInfo.json"
+
+/*
+ 1.16.1	忘记密码接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/login/forgotPassword.json
+ */
+#define kFORGET_PASSWORD @"login/forgotPassword.json"
+
+/*
+ 1.17.1	商品单品页查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/ware/getProductInfo.json
+ */
+#define kGET_PRODUCT_INFO @"ware/getProductInfo.json"
+
+/*
+ 1.18.1	单品页商品参数查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/ware/getAttributeInfo.json
+ */
+#define kGET_ATTRIBUTE_INFO @"ware/getAttributeInfo.json"
+
+/*
+ 1.20.1	加入购物车前选择个体接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/ware/getProductDetailInfo.json
+ */
+#define kGET_PRODUCT_DETAIL_INFO @"ware/getProductDetailInfo.json"
+
+/*
+ 1.23.1	添加商品到购物车接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/cart/addCartInfo.json
+ */
+#define kADD_CART_INFO @"cart/addCartInfo.json"
+
+/*
+ 1.23.1	收藏商品接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/addToDesire.json
+ */
+#define kADD_TO_DISIRE @"subscriber/addToDesire.json"
+
+/*
+ 1.23.1	删除收藏商品接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/deleteCollectInfo.json
+ */
+#define kDELETE_COLLECTION_INFO @"subscriber/deleteCollectInfo.json"
+
+/*
+ 1.23.1	是否已收藏商品接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/wetherAddToDesire.json
+ */
+#define kWETHER_ADD_TO_DISIRE @"subscriber/wetherAddToDesire.json"
+
+/*
+ 1.25.1	我的收藏查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getCollectInfo.json
+ */
+#define kGET_COLLECT_INFO @"subscriber/getCollectInfo.json"
+
+/*
+ 1.27	商品评价查询接口（单品页展示）
+ 1.27.1	商品评价查询接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/ware/getDiscussInfo.json
+ */
+#define kGET_DISCUSS_INFO @"ware/getDiscussInfo.json"
+
+/*
+1.28.1	购物车查询接口信息描述
+接口名称	登录接口
+接口URL	http://192.168.200.92:8080/hueasyApp/cart/getCartInfo.json
+ */
+#define kGET_CART_INFO @"cart/getCartInfo.json"
+
+/*
+ 1.29.1	商品评价接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/saveDiscussInfo.json
+ */
+#define kSAVE_DISCUSS_INFO @"subscriber/saveDiscussInfo.json"
+
+/*
+ 1.31.1	购物车删除接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/cart/deleteCartInfo.json
+ */
+#define kDELETE_CART_INFO @"cart/deleteCartInfo.json"
+
+/*
+1.32	购物车商品数量增减接口
+1.32.1	购物车商品数量增减接口信息描述
+
+接口名称	登录接口
+接口URL	http://192.168.200.92:8080/hueasyApp/cart/changeAmount.json
+ 
+ */
+#define kCHANGE_AMOUNT @"cart/changeAmount.json"
+
+/*
+ 1.32.1	购物车清空接口信息描述
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/cart/deleteAllCartInfo.json
+ */
+#define kDELETE_ALL_CART_INFO @"cart/deleteAllCartInfo.json"
+
+/*
+ 1.35.1	收货人信息查询接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/order/getDeliveryInfo.json
+ */
+#define kGET_DELIVERY_INFO @"order/getDeliveryInfo.json"
+
+/*
+ 1.35.1	结算中心接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/order/fillOutOrder.json
+ */
+#define kFILL_OUT_ORDER @"order/fillOutOrder.json"
+
+/*
+ 1.36	提交订单接口
+ 1.36.1	提交订单接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/order/submitOrder.json
+ */
+#define kSUBMIT_ORDER @"order/submitOrder.json"
+
+/*
+ 接口名称	我的订单查询接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getMyOrder.json
+ */
+#define kGET_MY_ORDER @"subscriber/getMyOrder.json"
+
+/*
+1.38.1	账户管理接口信息描述
+
+接口名称	登录接口
+接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/editSubscriberInfo.json
+ 1.43.1	订单详情查询接口信息描述
+ 
+ */
+#define kEDIT_SUBSCRIBERINFO @"subscriber/editSubscriberInfo.json"
+
+/*
+ 
+ 1.39.1	收货人地址保存及修改接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/addOrEditDeliveryInfo.json
+ 
+ */
+
+#define kADDOREDITDELIVERYINFO @"subscriber/addOrEditDeliveryInfo.json"
+
+/*
+ 1.45.1	区域信息查询接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getMyOrderDetail.json
+ 接口URL	http://192.168.200.92:8080/hueasyApp/login/getProvinceInfo.json
+ */
+#define kGET_MY_ORDER_DETAIL @"subscriber/getMyOrderDetail.json"
+
+#define kGET_PROVINCEINFO @"login/getProvinceInfo.json"
+
+
+
+/*
+ 1.44.1	区域信息查询接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getBroswerWare.json
+ */
+#define kGET_BROWSER_WARE @"subscriber/getBroswerWare.json"
+
+/*
+ 1.47.1	我的足迹保存接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/addBroswerWare.json
+ */
+#define kADD_BROWSER_WARE @"subscriber/addBroswerWare.json"
+/*
+1.29.1	商品评价查询接口信息描述
+接口名称	登录接口
+接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getMyDiscussInfo.json
+ 
+ */
+#define kGET_MYDISCUSSINFO @"subscriber/getMyDiscussInfo.json"
+
+/*
+ 登录接口
+ http://192.168.200.92:8080/hueasyApp/subscriber/addSuggestionInfo.json
+ */
+#define kADD_SUGGESTION_INFO @"subscriber/addSuggestionInfo.json"
+
+/*
+ 1.41.1	收货人地址删除接口信息描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/deleteDeliveryInfo.json
+ 
+*/
+#define kDELETE_DELIVERYINFO  @"subscriber/deleteDeliveryInfo.json"
+
+/*
+ 1.50.1	版本信息查询接口描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/getSystemInfo.json
+ */
+#define kGET_SYSTEM_INFO @"subscriber/getSystemInfo.json"
+
+/*
+ 1.1.1	商家信息查询接口描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/login/getMerchantInfo.json
+*/
+#define kGET_MERCHANT_INFO @"login/getMerchantInfo.json"
+
+/*
+ 1.52.1	确认收货接口描述
+ 
+ 接口名称	登录接口
+ 接口URL	http://192.168.200.92:8080/hueasyApp/subscriber/confirmOrder.json
+ */
+#define kCONFIRM_ORDER @"subscriber/confirmOrder.json"
+
+/****************************生产环境***********************************/
+
+//#define kSERVERURL
+
+/**********************************************************************/
+
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+//屏幕
+#define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
+#define SCREEN_WIDTH [[UIScreen mainScreen] bounds].size.width
+
+#define IPHONE5  ((((int)[[UIScreen mainScreen] bounds].size.height)>>9)==1?1:0)
+
+#define XIB_NAME(X)  (IPHONE5?[X stringByAppendingString:@"_5"]:X)
+
+#define NUSD [NSUserDefaults standardUserDefaults]
+
+#define IOS7_LAYOUT_OPAQUEBARS \
+if([self respondsToSelector:@selector(setEdgesForExtendedLayout:)])\
+{\
+self.edgesForExtendedLayout = UIRectEdgeNone;\
+}
+
+
+#define  APP_DELEGATE ((AppDelegate*)[[UIApplication sharedApplication] delegate])
+
+
+#define kCURRENT_USER_DATABASE_PATH  @"kCurrentUserDatabasePath"
+
+/****************************接口***********************************/
+#define kSEARCH_GOODS @"ware/getSearchInfo.json"

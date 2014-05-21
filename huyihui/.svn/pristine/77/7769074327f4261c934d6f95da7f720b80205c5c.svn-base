@@ -1,0 +1,14 @@
+//
+//  AppRecommendDetailViewController.h
+//  huyihui
+//
+//  Created by pengzhizhong on 14-4-25.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "BaseViewController.h"
+
+@interface AppRecommendDetailViewController : BaseViewController
+@property (retain, nonatomic)NSDictionary *dic;
+
+@end

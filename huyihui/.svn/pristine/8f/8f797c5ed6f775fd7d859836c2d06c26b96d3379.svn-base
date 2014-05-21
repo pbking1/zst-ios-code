@@ -1,0 +1,50 @@
+//
+//  AppRecommendDetailViewController.m
+//  huyihui
+//
+//  Created by pengzhizhong on 14-4-25.
+//  Copyright (c) 2014年 linyi. All rights reserved.
+//
+
+#import "AppRecommendDetailViewController.h"
+
+@interface AppRecommendDetailViewController ()
+
+@property (retain, nonatomic) NSMutableArray *hsImageList;//广告图片地址数组
+@property (retain, nonatomic) HorizontalScrollImageShow *hsImageShow;//对象
+
+@end
+
+@implementation AppRecommendDetailViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.title = @"首页";
+    self.navigationItem.leftBarButtonItem = nil;
+    self.hsImageList=[[NSMutableArray new]autorelease];
+    //
+  
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc {
+    [_table release];
+    [super dealloc];
+}
+@end

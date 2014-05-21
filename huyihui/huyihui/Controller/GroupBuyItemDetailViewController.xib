@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GroupBuyItemDetailViewController">
+            <connections>
+                <outlet property="bottomView0" destination="LEW-aW-B6f" id="Z8T-nG-bZk"/>
+                <outlet property="bottomView1" destination="FLQ-0y-zET" id="cJU-dL-LAK"/>
+                <outlet property="bottomView2" destination="Txf-ok-rTy" id="OnA-wW-2ch"/>
+                <outlet property="table" destination="JqY-1v-nRl" id="tsm-ff-5t8"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="JqY-1v-nRl">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <color key="separatorColor" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                    <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="VEH-xB-Rms"/>
+                        <outlet property="delegate" destination="-1" id="Zs8-W3-tB5"/>
+                    </connections>
+                </tableView>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LEW-aW-B6f">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYP-EB-zbK">
+                            <rect key="frame" x="121" y="7" width="88" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="敬请期待" backgroundImage="tab_button3_normal.png">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="uAp-eq-Uv4"/>
+                    </constraints>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Txf-ok-rTy">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tjO-NY-sRO">
+                            <rect key="frame" x="121" y="7" width="88" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="已经结束" backgroundImage="tab_button1_normal.png">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="R3Z-Ks-Af7"/>
+                    </constraints>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FLQ-0y-zET">
+                    <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JXJ-Fk-7pX">
+                            <rect key="frame" x="64" y="7" width="78" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="立即参团" backgroundImage="tab_button2_normal.png">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="onJoinGroupBuy:" destination="-1" eventType="touchUpInside" id="XuL-uG-HRj"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Czg-nh-sXR">
+                            <rect key="frame" x="179" y="7" width="75" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="加入购物车" backgroundImage="tab_button1_normal.png">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="onAddtoShoppingCart:" destination="-1" eventType="touchUpInside" id="3DV-Rf-fyq"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="hus-2r-E4S"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Txf-ok-rTy" secondAttribute="bottom" id="00c-5x-239"/>
+                <constraint firstAttribute="bottom" secondItem="FLQ-0y-zET" secondAttribute="bottom" id="ImS-TJ-bTf"/>
+                <constraint firstItem="JqY-1v-nRl" firstAttribute="top" secondItem="1" secondAttribute="top" id="IpF-gU-bzn"/>
+                <constraint firstItem="FLQ-0y-zET" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="M7k-P2-kHq"/>
+                <constraint firstAttribute="bottom" secondItem="LEW-aW-B6f" secondAttribute="bottom" id="Q61-qM-q5B"/>
+                <constraint firstAttribute="trailing" secondItem="LEW-aW-B6f" secondAttribute="trailing" id="QtH-9p-g3f"/>
+                <constraint firstItem="LEW-aW-B6f" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="Sad-SG-OCc"/>
+                <constraint firstAttribute="bottom" secondItem="JqY-1v-nRl" secondAttribute="bottom" constant="44" id="T9c-oZ-VOH"/>
+                <constraint firstAttribute="trailing" secondItem="FLQ-0y-zET" secondAttribute="trailing" id="aXh-Hd-AzA"/>
+                <constraint firstItem="JqY-1v-nRl" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="dd3-Xn-RRU"/>
+                <constraint firstAttribute="trailing" secondItem="JqY-1v-nRl" secondAttribute="trailing" id="qG9-bT-Wfg"/>
+                <constraint firstAttribute="trailing" secondItem="Txf-ok-rTy" secondAttribute="trailing" id="quz-rX-0OH"/>
+                <constraint firstItem="Txf-ok-rTy" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="wr7-nZ-DqN"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="tab_button1_normal.png" width="88" height="24"/>
+        <image name="tab_button2_normal.png" width="88" height="24"/>
+        <image name="tab_button3_normal.png" width="88" height="23"/>
+    </resources>
+</document>
