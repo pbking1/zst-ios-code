@@ -96,6 +96,12 @@
         [self setTitle:@"更多" forState:UIControlStateNormal];
         [self setTitle:@"更多" forState:UIControlStateHighlighted];
         
+    }else if (_type == BACKTOMAINPAGE)  //?
+    {
+        self.frame = CGRectMake(50, 50, 40, 44);
+        [self setTitle:@"返回主页" forState:UIControlStateNormal];
+        [self setTitle:@"返回主页" forState:UIControlStateHighlighted];
+        
     }else if (_type == HuEasyButtonTypeDelete){
         self.frame = CGRectMake(0, 0, 40, 44);
         [self setTitle:NSLocalizedString(@"删除" ,@"") forState:UIControlStateNormal];

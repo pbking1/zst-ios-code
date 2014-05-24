@@ -85,6 +85,7 @@ static NSString *itemCell = @"itemCell";
     [settleBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [settleBtn addTarget:self action:@selector(onCheckOut:) forControlEvents:UIControlEventTouchUpInside];
     
+    
     totalPriceLabel=[[UILabel alloc]initWithFrame:CGRectMake(20, 7, 200, 30)];
     totalPriceLabel.text=@"合计：0.00元（含邮费：10元）";
     [totalPriceLabel setFont:[UIFont systemFontOfSize:13]];
@@ -102,6 +103,26 @@ static NSString *itemCell = @"itemCell";
                                [NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:settleView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:.0]
                                ]];
     [settleView addConstraint:[NSLayoutConstraint constraintWithItem:settleView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:.0 constant:44.0]];
+    
+    //new added
+    ButtonFactory *buttonFactory = [ButtonFactory factory];
+    UIButton *rightBtn = [buttonFactory createButtonWithType:BACKTOMAINPAGE];
+    [rightBtn addTarget:self action:@selector(gobacktomain:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
+    self.navigationItem.rightBarButtonItem = rightBarItem;
+    [rightBarItem release];
+}
+//new added
+- (void)gobacktomain:(id)paramSender{
+    UIViewController *target = nil;
+    for(UIViewController *controller in self.navigationController.viewControllers){
+        if([controller isKindOfClass:[HomePageViewController class]]){
+            target = controller;
+        }
+    }
+    if(target){
+        [self.navigationController popToViewController:target animated:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{

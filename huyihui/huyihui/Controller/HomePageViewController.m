@@ -96,6 +96,9 @@ static NSString *header2 = @"header2";
     
     [self performSelectorInBackground:@selector(requestData) withObject:nil];
     
+    //new add
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning

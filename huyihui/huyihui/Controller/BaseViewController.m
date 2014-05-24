@@ -45,11 +45,18 @@
         backBtn.clickHandler = ^(){
             [self.navigationController popViewControllerAnimated:YES];
         };
-
+        
         UIBarButtonItem *leftBarItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
         self.navigationItem.leftBarButtonItem = leftBarItem;
         self.navigationItem.hidesBackButton = YES;
         [leftBarItem release];
+        
+        /*new added
+        UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+        self.navigationItem.rightBarButtonItem = rightBarItem;
+        self.navigationItem.hidesBackButton = YES;
+        [rightBarItem release];*/
+        
     }else{
         [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav_background"] forBarMetrics:UIBarMetricsDefault];
     }

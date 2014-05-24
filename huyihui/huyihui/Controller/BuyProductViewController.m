@@ -8,6 +8,7 @@
 
 #import "BuyProductViewController.h"
 #import "CheckOutCenterViewController.h"
+#import "HomePageViewController.h"
 
 @interface BuyProductViewController ()
 
@@ -62,6 +63,7 @@ static NSString *collectionCellHeader2 = @"collectionCellHeader2";
 static NSString *collectionCellFooter = @"collectionCellFooter";
 //static NSString *collectionCellSeperator = @"collectionCellSeperator";
 //static NSString *collectionLastCell= @"collectionLastCell";
+
 
 - (void)viewDidLoad
 {
@@ -581,6 +583,13 @@ static NSString *collectionCellFooter = @"collectionCellFooter";
                         checkOutCenter.title=@"结算中心";
                         [self.navigationController pushViewController:checkOutCenter animated:YES];
                         [checkOutCenter release];
+                        //new added
+                        /*
+                        HomePageViewController *homepage = [[HomePageViewController alloc] initWithNibName:nil bundle:NULL];
+                        homepage.title=@"首页";
+                        homepage.hidesBottomBarWhenPushed=YES;
+                        [self.navigationController pushViewController:homepage animated:YES];
+                        [homepage release];*/
                         
                     }
                 }

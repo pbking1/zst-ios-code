@@ -11,6 +11,7 @@
 #import "HuEasyShoppingCart.h"
 #import "ZacFloatInputView.h"
 #import "ZacNoticeView.h"
+#import "HomePageViewController.h"
 
 @interface BuyProductViewController : BaseViewController<UICollectionViewDataSource ,UICollectionViewDelegate, UITextFieldDelegate>
 

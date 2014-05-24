@@ -5,45 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>CA5F26CC-B063-4F07-9BCC-B5FFF74DECAE</string>
+	<string>AFEED8A2-9A21-4D53-89FE-7A4B82502979</string>
 	<key>IDESourceControlProjectName</key>
 	<string>huyihui</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>48ACA134-0344-4133-8C7C-2F4FBC6F213B</key>
-		<string>https://192.168.200.75:81/svn/Mobile/trunk/huyihui</string>
+		<key>ACF1F688-4FBA-4397-A9DD-B8C79E60D84D</key>
+		<string>https://github.com/pbking1/zst-ios-code.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>huyihui.xcodeproj/project.xcworkspace</string>
+	<string>huyihui/huyihui.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>48ACA134-0344-4133-8C7C-2F4FBC6F213B</key>
-		<string>../..</string>
-	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>48ACA134-0344-4133-8C7C-2F4FBC6F213B</key>
-		<string>https://192.168.200.75:81/svn/Mobile</string>
+		<key>ACF1F688-4FBA-4397-A9DD-B8C79E60D84D</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://192.168.200.75:81/svn/Mobile/trunk/huyihui/huyihui.xcodeproj</string>
+	<string>https://github.com/pbking1/zst-ios-code.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>48ACA134-0344-4133-8C7C-2F4FBC6F213B</string>
+	<string>ACF1F688-4FBA-4397-A9DD-B8C79E60D84D</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
-			<key>IDESourceControlRepositoryBranchesRelativeLocationKey</key>
-			<string>branches</string>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlRepositoryTagsRelativeLocationKey</key>
-			<string>tags</string>
-			<key>IDESourceControlRepositoryTrunkRelativeLocationKey</key>
-			<string>trunk</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>48ACA134-0344-4133-8C7C-2F4FBC6F213B</string>
+			<string>ACF1F688-4FBA-4397-A9DD-B8C79E60D84D</string>
 			<key>IDESourceControlWCCName</key>
 			<string>huyihui</string>
 		</dict>

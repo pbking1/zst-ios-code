@@ -31,5 +31,6 @@ typedef NS_OPTIONS(NSUInteger, HuEasyButtonType){
 #define FILTERBUTTON 7
 #define MOREBTN  8
 #define SENDBUTTON 9
+#define BACKTOMAINPAGE 13
 
 #endif
